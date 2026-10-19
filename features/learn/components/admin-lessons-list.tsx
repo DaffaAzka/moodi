@@ -178,11 +178,10 @@ export function AdminLessonsList({
                     {/* Status Badge */}
                     <td className="px-4 py-3">
                       <span
-                        className={`inline-block border px-2 py-0.5 text-xs font-semibold ${
-                          isPublished
+                        className={`inline-block border px-2 py-0.5 text-xs font-semibold ${isPublished
                             ? "border-primary bg-moodi-sky/30 text-ink"
                             : "border-border bg-muted text-muted-foreground"
-                        }`}
+                          }`}
                       >
                         {isPublished
                           ? siteCopy.questionBank.statusPublished
@@ -194,7 +193,7 @@ export function AdminLessonsList({
                     <td className="px-4 py-3 text-xs">
                       {lesson.source === "ai_assisted" ? (
                         <span className="inline-flex items-center gap-1 text-primary font-medium">
-                          <PixelIcon name="sparkle" size={14} /> AI {lesson.reviewedAt ? "(Ditinjau)" : "(Draf)"}
+                          <PixelIcon name="sparkle" size={14} /> AI
                         </span>
                       ) : (
                         <span className="text-muted-foreground">Manual</span>
