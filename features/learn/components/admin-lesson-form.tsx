@@ -157,22 +157,20 @@ export function AdminLessonForm({
           {/* Preview Toggle */}
           <div className="flex border-2 border-border">
             <button
-              className={`pixel-press px-4 py-1.5 text-xs font-semibold ${
-                !isPreview
-                  ? "bg-foreground text-background"
-                  : "bg-background text-foreground hover:bg-muted"
-              }`}
+              className={`pixel-press px-4 py-1.5 text-xs font-semibold ${!isPreview
+                ? "bg-foreground text-background"
+                : "bg-background text-foreground hover:bg-muted"
+                }`}
               onClick={() => setIsPreview(false)}
               type="button"
             >
               Mode Editor
             </button>
             <button
-              className={`pixel-press px-4 py-1.5 text-xs font-semibold ${
-                isPreview
-                  ? "bg-foreground text-background"
-                  : "bg-background text-foreground hover:bg-muted"
-              }`}
+              className={`pixel-press px-4 py-1.5 text-xs font-semibold ${isPreview
+                ? "bg-foreground text-background"
+                : "bg-background text-foreground hover:bg-muted"
+                }`}
               onClick={() => setIsPreview(true)}
               type="button"
             >
@@ -181,18 +179,6 @@ export function AdminLessonForm({
           </div>
         </div>
       </div>
-
-      {initialData?.source === "ai_assisted" && !initialData?.reviewedAt && (
-        <div className="border-2 border-border bg-moodi-butter/40 p-4 text-xs font-semibold text-ink flex items-start gap-3">
-          <span className="text-base">⚠️</span>
-          <div>
-            <p className="font-bold">Draf materi ini dibuat dengan bantuan AI (Gemini).</p>
-            <p className="mt-0.5 font-normal text-foreground">
-              Admin wajib memeriksa kebenaran konsep, rumus, dan latihan soal sebelum materi ini diterbitkan ke siswa.
-            </p>
-          </div>
-        </div>
-      )}
 
       {error && (
         <div className="border-2 border-border bg-moodi-peach/30 p-4 text-xs font-semibold text-ink">
@@ -329,9 +315,8 @@ export function AdminLessonForm({
                   const isChecked = selectedQuestionIds.includes(q.id);
                   return (
                     <label
-                      className={`flex cursor-pointer items-start gap-3 p-3 transition-colors ${
-                        isChecked ? "bg-moodi-sky/20" : "hover:bg-muted/50"
-                      }`}
+                      className={`flex cursor-pointer items-start gap-3 p-3 transition-colors ${isChecked ? "bg-moodi-sky/20" : "hover:bg-muted/50"
+                        }`}
                       key={q.id}
                     >
                       <input
