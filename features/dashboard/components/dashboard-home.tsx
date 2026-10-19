@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { QuestionBankCounts } from "@/features/question-bank/queries";
 import { siteCopy } from "@/lib/copy/id";
-import { ArrowRightIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 
 const copy = siteCopy.questionBank;
 
@@ -109,9 +109,9 @@ export function AdminDashboard({
                   {link.description}
                 </p>
               </div>
-              <div className="mt-5 flex items-center gap-1 border-t border-border/40 pt-3 text-xs font-bold text-link">
+              <div className="mt-5 flex items-center gap-1.5 border-t border-border/40 pt-3 text-xs font-bold text-link">
                 <span>Kelola</span>
-                <ArrowRightIcon className="size-3.5" />
+                <PixelIcon name="arrow-right" size={14} />
               </div>
             </Link>
           ))}

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { saveErrorTagAction } from "@/features/practice/actions";
-import { CheckIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 import { siteCopy } from "@/lib/copy/id";
 import type { ErrorCause, TagSource } from "@/app/generated/prisma/enums";
 
@@ -83,8 +83,8 @@ export function ErrorTagPicker({
       </div>
 
       {statusMessage && (
-        <p className="inline-flex items-center gap-1 text-[11px] font-medium text-foreground/80 animate-fade-in">
-          <CheckIcon className="size-3" />
+        <p className="inline-flex items-center gap-1.5 text-[11px] font-medium text-foreground/80 animate-fade-in">
+          <PixelIcon name="check" size={12} />
           <span>{statusMessage}</span>
         </p>
       )}

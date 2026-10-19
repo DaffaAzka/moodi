@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { submitCheckAnswersAction } from "@/features/learn/actions";
 import { siteCopy } from "@/lib/copy/id";
 import type { CheckQuestionData } from "@/features/learn/types";
-import { CheckIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 import { RichTextView } from "@/components/editor/rich-text-view";
 
 interface CheckQuestionsProps {
@@ -111,7 +111,7 @@ export function CheckQuestions({
       {isFinished && scoreSummary ? (
         <div className="space-y-4 border-2 border-border bg-moodi-sky/20 p-6 text-center">
           <div className="mx-auto flex size-12 items-center justify-center border-2 border-border bg-moodi-sky text-ink">
-            <CheckIcon className="size-6" />
+            <PixelIcon name="check" size={24} />
           </div>
           <h3 className="font-pixelify text-xl font-bold text-foreground">
             {siteCopy.learn.checkFinished}
@@ -201,10 +201,15 @@ export function CheckQuestions({
               }`}
             >
               <div className="flex items-center gap-2">
+                <PixelIcon
+                  name={isCurrentCorrect ? "check" : "info"}
+                  size={16}
+                  className={isCurrentCorrect ? "text-primary" : "text-muted-foreground"}
+                />
                 <span className="font-bold text-sm">
                   {isCurrentCorrect
-                    ? `✓ ${siteCopy.learn.correctFeedback}`
-                    : `ℹ ${siteCopy.learn.wrongFeedback}`}
+                    ? siteCopy.learn.correctFeedback
+                    : siteCopy.learn.wrongFeedback}
                 </span>
               </div>
               {currentQ.explanation && (

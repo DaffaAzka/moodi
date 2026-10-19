@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { siteCopy } from "@/lib/copy/id";
 import type { StudyHubData } from "@/features/learn/types";
-import { CheckIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 
 interface StudyHubProps {
   data: StudyHubData;
@@ -30,7 +30,7 @@ export function StudyHub({ data }: StudyHubProps) {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="border border-border bg-moodi-sky px-2 py-0.5 text-xs font-bold text-ink">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   {siteCopy.learn.resumeCardTitle}
                 </span>
                 <span className="text-xs text-muted-foreground">
@@ -53,10 +53,11 @@ export function StudyHub({ data }: StudyHubProps) {
 
             <div className="shrink-0">
               <Link
-                className="pixel-press pixel-shadow inline-flex min-h-12 items-center border-2 border-border bg-moodi-sky px-6 font-semibold text-ink hover:opacity-90"
+                className="pixel-press pixel-shadow inline-flex min-h-12 items-center gap-2 border-2 border-border bg-moodi-sky px-6 font-semibold text-ink hover:opacity-90"
                 href={`/dashboard/study/lessons/${resumeLesson.lessonId}`}
               >
-                {siteCopy.learn.resumeCardAction} →
+                <span>{siteCopy.learn.resumeCardAction}</span>
+                <PixelIcon name="arrow-right" size={16} />
               </Link>
             </div>
           </div>
@@ -105,10 +106,11 @@ export function StudyHub({ data }: StudyHubProps) {
 
                 <div className="mt-5 border-t border-border/40 pt-3">
                   <Link
-                    className="pixel-press inline-flex min-h-10 items-center border-2 border-border bg-background px-4 text-xs font-semibold hover:bg-muted"
+                    className="pixel-press inline-flex min-h-10 items-center gap-1.5 border-2 border-border bg-background px-4 text-xs font-semibold hover:bg-muted"
                     href={`/dashboard/study/lessons/${rec.lessonId}`}
                   >
-                    Buka materi →
+                    <span>Buka materi</span>
+                    <PixelIcon name="arrow-right" size={12} />
                   </Link>
                 </div>
               </article>
@@ -175,8 +177,11 @@ export function StudyHub({ data }: StudyHubProps) {
                       </p>
                     </div>
 
-                    <span className="text-sm font-bold text-muted-foreground">
-                      {isExpanded ? "▲" : "▼"}
+                    <span className="text-muted-foreground">
+                      <PixelIcon
+                        name={isExpanded ? "chevron-up" : "chevron-down"}
+                        size={16}
+                      />
                     </span>
                   </button>
 
@@ -221,10 +226,10 @@ export function StudyHub({ data }: StudyHubProps) {
                                       </h5>
                                       {isCompleted ? (
                                         <span className="shrink-0 text-primary">
-                                          <CheckIcon className="size-4" />
+                                          <PixelIcon name="check" size={14} />
                                         </span>
                                       ) : isInProgress ? (
-                                        <span className="size-2 rounded-full bg-moodi-peach mt-1.5 shrink-0" />
+                                        <span className="size-2 bg-moodi-peach mt-1.5 shrink-0" />
                                       ) : null}
                                     </div>
                                     {lesson.summary && (
@@ -241,8 +246,9 @@ export function StudyHub({ data }: StudyHubProps) {
                                         String(lesson.estMinutes),
                                       )}
                                     </span>
-                                    <span className="font-semibold text-foreground">
-                                      Buka →
+                                    <span className="font-semibold text-foreground inline-flex items-center gap-1">
+                                      <span>Buka</span>
+                                      <PixelIcon name="arrow-right" size={12} />
                                     </span>
                                   </div>
                                 </Link>

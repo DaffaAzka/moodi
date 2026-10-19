@@ -5,7 +5,7 @@ import { $getRoot, $getSelection } from "lexical";
 import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/extension";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
-import { Minus } from "lucide-react";
+import { PixelIcon } from "@/components/pixel";
 
 import {
   type ComponentPickerItem,
@@ -22,7 +22,7 @@ export function DividerPickerPlugin() {
       {
         value: "divider",
         label: t.insertHorizontalRule,
-        icon: <Minus className="text-muted-foreground" />,
+        icon: <PixelIcon name="divider" size={16} className="text-muted-foreground" />,
         keywords: ["horizontal rule", "divider", "hr", "separator"],
         onSelect: () => {
           editor.update(() => {

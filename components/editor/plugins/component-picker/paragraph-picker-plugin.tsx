@@ -5,7 +5,7 @@ import { $createParagraphNode, $getRoot, $getSelection } from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $setBlocksType } from "@lexical/selection";
 
-import { Pilcrow } from "lucide-react";
+import { PixelIcon } from "@/components/pixel";
 
 import {
   type ComponentPickerItem,
@@ -22,7 +22,7 @@ export function ParagraphPickerPlugin() {
       {
         value: "paragraph",
         label: t.paragraph,
-        icon: <Pilcrow className="text-muted-foreground" />,
+        icon: <PixelIcon name="paragraph" size={16} className="text-muted-foreground" />,
         keywords: ["normal", "paragraph", "p", "text"],
         onSelect: () =>
           editor.update(() => {

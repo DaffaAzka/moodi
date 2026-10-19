@@ -4,35 +4,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/sign-out-button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { HeartIcon } from "@/components/icons";
+import { PixelIcon, type PixelIconName } from "@/components/pixel";
 import { siteCopy } from "@/lib/copy/id";
 import type { UserRole } from "@/lib/user-role";
 
 function NavigationIcon({ icon }: { icon: string }) {
-  const iconPaths: Record<string, string> = {
-    home: "M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z",
-    book: "M4 4h7v16H4zm9 0h7v16h-7zM6 7h3m7 0h3",
-    timer: "M9 2h6m-3 4v2m7.07.93 1.41-1.41M12 10v4l3 2m5-2a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z",
-    chart: "M4 20V10h4v10zm6 0V4h4v16zm6 0v-7h4v7z",
-    calm: "M12 3v3m0 12v3M3 12h3m12 0h3M5.64 5.64l2.12 2.12m8.48 8.48 2.12 2.12m0-12.72-2.12 2.12m-8.48 8.48-2.12 2.12M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0Z",
-    grid: "M3 3h7v7H3zm11 0h7v7h-7zM3 14h7v7H3zm11 0h7v7h-7z",
-    list: "M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01",
+  const iconNameMap: Record<string, PixelIconName> = {
+    home: "home",
+    book: "book",
+    timer: "timer",
+    chart: "chart",
+    calm: "calm",
+    grid: "table",
+    list: "list",
   };
 
-  return (
-    <svg
-      aria-hidden="true"
-      className="size-5 shrink-0"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="square"
-      strokeLinejoin="miter"
-      strokeWidth="1.8"
-      viewBox="0 0 24 24"
-    >
-      <path d={iconPaths[icon] ?? iconPaths.home} />
-    </svg>
-  );
+  const name = iconNameMap[icon] ?? "home";
+  return <PixelIcon name={name} size={20} className="shrink-0" />;
 }
 
 function DashboardNavigation({
@@ -133,7 +121,7 @@ export function Sidebar({ role }: { role: UserRole }) {
             className="flex items-center gap-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
             href="/dashboard/support"
           >
-            <HeartIcon className="size-4 shrink-0 text-foreground" />
+            <PixelIcon name="support" size={16} className="text-foreground shrink-0" />
             <span>Bantuan & Dukungan</span>
           </Link>
           <ThemeToggle />

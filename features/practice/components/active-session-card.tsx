@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteCopy } from "@/lib/copy/id";
+import { PixelIcon } from "@/components/pixel";
 import type { TryoutMode } from "@/app/generated/prisma/enums";
 
 const levelLabels: Record<TryoutMode, string> = {
@@ -36,11 +37,11 @@ export function ActiveSessionCard({ session }: ActiveSessionProps) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-block border border-border bg-moodi-butter px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-ink">
+            <span className="font-mono text-xs font-bold uppercase tracking-wider text-foreground">
               {levelLabels[session.mode]}
             </span>
             {subtestBadge && (
-              <span className="text-xs text-muted-foreground">{subtestBadge}</span>
+              <span className="text-xs text-muted-foreground">· {subtestBadge}</span>
             )}
             <span className="text-xs text-muted-foreground">
               · {session._count.answers} {siteCopy.practice.questionNavigator.toLowerCase()}
@@ -59,10 +60,11 @@ export function ActiveSessionCard({ session }: ActiveSessionProps) {
 
         <div className="shrink-0">
           <Link
-            className="pixel-press pixel-shadow inline-flex min-h-12 items-center justify-center border-2 border-border bg-moodi-sky px-6 font-semibold text-ink hover:bg-moodi-sky/90"
+            className="pixel-press pixel-shadow inline-flex min-h-12 items-center justify-center gap-1.5 border-2 border-border bg-moodi-sky px-6 font-semibold text-ink hover:bg-moodi-sky/90"
             href={`/dashboard/sessions/${session.id}`}
           >
-            {siteCopy.practice.resumeSession}
+            <span>{siteCopy.practice.resumeSession}</span>
+            <PixelIcon name="arrow-right" size={14} />
           </Link>
         </div>
       </div>

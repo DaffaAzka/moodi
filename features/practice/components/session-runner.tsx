@@ -14,7 +14,7 @@ import {
   type ImmediateFeedback,
 } from "@/features/practice/actions";
 import { RichContent } from "@/components/rich-content";
-import { CheckIcon, InfoIcon, SproutIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 import type { TryoutMode } from "@/app/generated/prisma/enums";
 
 export interface RunnerQuestion {
@@ -176,9 +176,9 @@ export function SessionRunner({
       <header className="sticky top-0 z-30 flex min-h-16 items-center justify-between border-b-2 border-border bg-card px-4 sm:px-6">
         <div className="flex items-center gap-3 min-w-0">
           <Link
-            className="pixel-press inline-flex items-center gap-1.5 border border-border bg-background px-3 py-1 text-xs font-semibold hover:bg-muted"
+            className="pixel-press inline-flex items-center justify-center border border-border bg-background p-2 text-xs font-semibold hover:bg-muted"
             href="/dashboard">
-            ←
+            <PixelIcon name="arrow-left" size={14} />
           </Link>
           <div className="hidden sm:block min-w-0">
             <p className="truncate text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -308,9 +308,10 @@ export function SessionRunner({
               }`}>
               <div className="flex items-center gap-2 font-bold text-sm">
                 <span>
-                  {currentImmediateFeedback.isCorrect ?
-                    <CheckIcon className="size-4" />
-                  : <InfoIcon className="size-4" />}
+                  <PixelIcon
+                    name={currentImmediateFeedback.isCorrect ? "check" : "info"}
+                    size={16}
+                  />
                 </span>
                 <span>
                   {currentImmediateFeedback.isCorrect ?
@@ -334,7 +335,7 @@ export function SessionRunner({
           )}
         </main>
 
-        {/* Question Navigator (Single instance: Desktop sidebar & Mobile Drawer, with integrated Nafas dulu) */}
+        {/* Question Navigator (Single instance: Desktop sidebar & Mobile Drawer, with integrated Napas dulu) */}
         <QuestionNavigator
           answeredIndices={answeredIndices}
           currentIndex={currentIndex}
@@ -350,11 +351,12 @@ export function SessionRunner({
       {/* Bottom Sticky Action Bar */}
       <footer className="sticky bottom-0 z-30 flex min-h-16 items-center justify-between border-t-2 border-border bg-card px-4 sm:px-8">
         <button
-          className="pixel-press inline-flex min-h-10 items-center border-2 border-border px-4 text-xs sm:text-sm font-semibold hover:bg-muted disabled:opacity-40"
+          className="pixel-press inline-flex min-h-10 items-center gap-1.5 border-2 border-border px-4 text-xs sm:text-sm font-semibold hover:bg-muted disabled:opacity-40"
           disabled={currentIndex === 0}
           onClick={() => setCurrentIndex((idx) => Math.max(0, idx - 1))}
           type="button">
-          ← {siteCopy.practice.previousQuestion}
+          <PixelIcon name="arrow-left" size={14} />
+          <span>{siteCopy.practice.previousQuestion}</span>
         </button>
 
         <div className="text-xs font-semibold sm:text-sm lg:hidden">
@@ -389,7 +391,7 @@ export function SessionRunner({
               {isAllAnswered ?
                 <span className="inline-flex items-center gap-1.5">
                   <span>{siteCopy.practice.finish}</span>
-                  <CheckIcon className="size-3.5" />
+                  <PixelIcon name="check" size={14} />
                 </span>
               : `Belum lengkap (${answeredIndices.size}/${questions.length})`}
             </button>
@@ -397,14 +399,15 @@ export function SessionRunner({
 
           {!isLastQuestion && (
             <button
-              className="pixel-press pixel-shadow inline-flex min-h-11 items-center border-2 border-border bg-moodi-sky px-5 text-xs sm:text-sm font-bold text-ink hover:bg-moodi-sky/90"
+              className="pixel-press pixel-shadow inline-flex min-h-11 items-center gap-1.5 border-2 border-border bg-moodi-sky px-5 text-xs sm:text-sm font-bold text-ink hover:bg-moodi-sky/90"
               onClick={() =>
                 setCurrentIndex((idx) =>
                   Math.min(questions.length - 1, idx + 1),
                 )
               }
               type="button">
-              {siteCopy.practice.nextQuestion} →
+              <span>{siteCopy.practice.nextQuestion}</span>
+              <PixelIcon name="arrow-right" size={14} />
             </button>
           )}
         </div>
@@ -468,7 +471,7 @@ export function SessionRunner({
                       }
                     }}
                     type="button">
-                    Lanjut Jawab Soal Belum Terisi →
+                    Lanjut Jawab Soal Belum Terisi
                   </button>
                   <button
                     className="pixel-press min-h-12 border-2 border-border px-4 font-semibold hover:bg-muted"
@@ -491,9 +494,9 @@ export function SessionRunner({
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs"
           role="dialog">
           <div className="pixel-shadow w-full max-w-md border-2 border-border bg-card p-6 space-y-4">
-            <span className="inline-block border border-border bg-moodi-butter px-2 py-0.5 text-xs font-semibold text-ink">
+            <p className="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Waktu Habis
-            </span>
+            </p>
             <h3
               className="font-pixelify text-xl font-bold text-foreground"
               id="soft-timer-title">
@@ -517,7 +520,7 @@ export function SessionRunner({
                 type="button">
                 {isAllAnswered ?
                   siteCopy.practice.continuePractice
-                : "Lengkapi Sisa Soal →"}
+                : "Lengkapi Sisa Soal"}
               </button>
               <button
                 className={`min-h-12 border-2 border-border px-4 font-semibold transition-all ${

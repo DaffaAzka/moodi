@@ -7,7 +7,7 @@ import {
   generateQuestionsWithAiAction,
 } from "@/features/ai/actions";
 import { AI_CONFIG } from "@/config/ai";
-import { CloseIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 
 interface AiDraftDialogProps {
   topicId: string;
@@ -87,10 +87,11 @@ export function AiDraftDialog({
               {topicName}
             </span>
             <h2
-              className="font-pixelify text-2xl font-bold text-foreground"
+              className="flex items-center gap-2 font-pixelify text-2xl font-bold text-foreground"
               id="ai-dialog-title"
             >
-              ✨ Buat Draf dengan AI
+              <PixelIcon name="sparkle" size={24} />
+              <span>Buat Draf dengan AI</span>
             </h2>
           </div>
           <button
@@ -100,7 +101,7 @@ export function AiDraftDialog({
             onClick={onClose}
             type="button"
           >
-            <CloseIcon className="size-3.5" />
+            <PixelIcon name="close" size={16} />
           </button>
         </div>
 
@@ -139,7 +140,10 @@ export function AiDraftDialog({
                   onClick={() => setKind("lesson")}
                   type="button"
                 >
-                  <div className="font-bold text-sm text-foreground">📖 Materi</div>
+                  <div className="flex items-center gap-1.5 font-bold text-sm text-foreground">
+                    <PixelIcon name="book" size={16} />
+                    <span>Materi</span>
+                  </div>
                   <div className="mt-0.5 text-xs text-muted-foreground">
                     Penjelasan konsep, contoh soal, dan rumus
                   </div>
@@ -154,7 +158,10 @@ export function AiDraftDialog({
                   onClick={() => setKind("questions")}
                   type="button"
                 >
-                  <div className="font-bold text-sm text-foreground">❓ Set Soal</div>
+                  <div className="flex items-center gap-1.5 font-bold text-sm text-foreground">
+                    <PixelIcon name="edit" size={16} />
+                    <span>Set Soal</span>
+                  </div>
                   <div className="mt-0.5 text-xs text-muted-foreground">
                     Latihan 5 pilihan (A-E) dengan kunci & pembahasan
                   </div>
@@ -233,8 +240,11 @@ export function AiDraftDialog({
               />
             </div>
 
-            <div className="border border-border/60 bg-muted/30 p-3 text-xs text-muted-foreground">
-              ⚠️ Draf yang dibuat akan disimpan berstatus <strong>Draf (Unpublished)</strong>. Admin wajib memeriksa dan mengeditnya sebelum diterbitkan ke siswa.
+            <div className="flex items-start gap-2 border border-border/60 bg-muted/30 p-3 text-xs text-muted-foreground">
+              <PixelIcon className="mt-0.5 shrink-0" name="warning" size={16} />
+              <span>
+                Draf yang dibuat akan disimpan berstatus <strong>Draf (Unpublished)</strong>. Admin wajib memeriksa dan mengeditnya sebelum diterbitkan ke siswa.
+              </span>
             </div>
 
             <div className="flex gap-3 pt-2">

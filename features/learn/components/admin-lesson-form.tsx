@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { saveLessonAction } from "@/features/learn/actions";
 import { siteCopy } from "@/lib/copy/id";
 import { RichTextView } from "@/components/editor/rich-text-view";
+import { PixelIcon } from "@/components/pixel";
 import type { SerializedEditorStateJson } from "@/lib/editor/validate-lexical";
 
 // Lazily load RichTextEditor only on admin routes to keep student bundle tiny
@@ -137,10 +138,11 @@ export function AdminLessonForm({
       {/* Header and Breadcrumb */}
       <div>
         <Link
-          className="text-xs font-semibold text-link underline underline-offset-4"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-link underline underline-offset-4"
           href={`/dashboard/question-bank/topics/${topicId}/lessons`}
         >
-          ← {siteCopy.learn.backToLessons}
+          <PixelIcon name="arrow-left" size={14} />
+          <span>{siteCopy.learn.backToLessons}</span>
         </Link>
         <div className="mt-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
           <span>{subtestName}</span>

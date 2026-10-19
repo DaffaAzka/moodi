@@ -5,7 +5,7 @@ import { ActiveSessionCard } from "@/features/practice/components/active-session
 import { LevelPicker } from "@/features/practice/components/level-picker";
 import { startSessionAction } from "@/features/practice/actions";
 import { PRACTICE } from "@/config/practice";
-import { CloseIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 import { siteCopy } from "@/lib/copy/id";
 import type { TryoutMode } from "@/app/generated/prisma/enums";
 import type { StudyCatalogData } from "@/features/practice/queries";
@@ -177,7 +177,7 @@ export function StudyCatalog({
                 onClick={() => setSelectedTopic(null)}
                 type="button"
               >
-                <CloseIcon className="size-3.5" />
+                <PixelIcon name="close" size={14} />
               </button>
             </div>
 

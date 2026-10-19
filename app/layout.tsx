@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Pixelify_Sans } from "next/font/google";
+import "@hackernoon/pixel-icon-library/fonts/iconfont.css";
 import "./globals.css";
 import { siteCopy } from "@/lib/copy/id";
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { InsightDashboardData } from "../queries";
-import { BulbIcon, ChartBarIcon, ArrowRightIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 
 export function InsightDashboard({ data }: { data: InsightDashboardData }) {
   const {
@@ -18,7 +18,7 @@ export function InsightDashboard({ data }: { data: InsightDashboardData }) {
     return (
       <div className="pixel-shadow space-y-6 border-2 border-border bg-card p-8 text-center sm:p-12">
         <div className="mx-auto grid size-16 place-items-center border-2 border-border bg-moodi-butter text-ink">
-          <ChartBarIcon className="size-8" />
+          <PixelIcon name="chart" size={32} />
         </div>
         <div className="mx-auto max-w-md space-y-2">
           <h2 className="font-pixelify text-2xl font-bold text-foreground sm:text-3xl">
@@ -47,7 +47,7 @@ export function InsightDashboard({ data }: { data: InsightDashboardData }) {
             href="/dashboard"
           >
             <span>Isi check-in hari ini</span>
-            <ArrowRightIcon className="size-4" />
+            <PixelIcon name="arrow-right" size={16} />
           </Link>
         </div>
       </div>
@@ -163,7 +163,7 @@ export function InsightDashboard({ data }: { data: InsightDashboardData }) {
 
         {dominantError && totalErrors > 0 && (
           <div className="flex items-start gap-2.5 border-2 border-border bg-moodi-sky/30 p-3.5">
-            <BulbIcon className="mt-0.5 size-4 shrink-0 text-ink" />
+            <PixelIcon name="bulb" size={16} className="mt-0.5 shrink-0 text-ink" />
             <p className="text-xs leading-relaxed text-ink sm:text-sm">
               <span className="font-bold">Temuan utama:</span> Sebanyak{" "}
               {Math.round((dominantError.count / totalErrors) * 100)}% dari kesalahanmu bertumpu pada faktor{" "}

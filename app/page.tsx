@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ArrowRightIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 import { siteCopy } from "@/lib/copy/id";
 
 function PixelStudyScene() {
@@ -79,42 +79,6 @@ function PixelStudyScene() {
   );
 }
 
-function FeatureGlyph({ icon }: { icon: "sun" | "grid" | "breath" }) {
-  if (icon === "sun") {
-    return (
-      <svg aria-hidden="true" className="size-10" viewBox="0 0 40 40">
-        <path
-          d="M16 4h8v6h-8zm0 26h8v6h-8zM4 16h6v8H4zm26 0h6v8h-6zM12 12h6v6h-6zm10 10h6v6h-6zm0-10h6v6h-6zm-10 10h6v6h-6z"
-          className="fill-foreground"
-        />
-        <path d="M16 16h8v8h-8z" className="fill-moodi-butter" />
-      </svg>
-    );
-  }
-
-  if (icon === "grid") {
-    return (
-      <svg aria-hidden="true" className="size-10" viewBox="0 0 40 40">
-        <path
-          d="M5 5h12v12H5zm18 0h12v12H23zM5 23h12v12H5zm18 0h12v12H23z"
-          className="fill-foreground"
-        />
-        <path d="M9 9h4v4H9zm18 0h4v4h-4zM9 27h4v4H9zm18 0h4v4h-4z" className="fill-moodi-sky" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg aria-hidden="true" className="size-10" viewBox="0 0 40 40">
-      <path
-        d="M4 19h8v-6h6V7h6v6h-6v6h-6v6H4zm32 2h-8v6h-6v6h-6v-6h6v-6h6v-6h8z"
-        className="fill-foreground"
-      />
-      <path d="M18 16h6v8h-6z" className="fill-moodi-peach" />
-    </svg>
-  );
-}
-
 export default function Home() {
   const copy = siteCopy.landing;
 
@@ -158,10 +122,9 @@ export default function Home() {
         {/* Hero Section */}
         <section className="mx-auto grid w-full max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:py-20">
           <div>
-            <div className="mb-4 inline-flex items-center gap-2 border-2 border-border bg-moodi-butter px-3 py-1.5 text-xs font-semibold text-ink shadow-[2px_2px_0_var(--border)]">
-              <span aria-hidden="true" className="size-2 bg-foreground" />
-              <span>{copy.eyebrow}</span>
-            </div>
+            <p className="mb-3 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              {copy.eyebrow}
+            </p>
             <h1 className="font-pixelify text-4xl leading-[1.1] sm:text-5xl lg:text-6xl">
               {copy.headlineFirst}{" "}
               <span className="block text-link">{copy.headlineSecond}</span>
@@ -175,7 +138,7 @@ export default function Home() {
                 href="/register"
               >
                 <span>{copy.primaryAction}</span>
-                <ArrowRightIcon className="size-4" />
+                <PixelIcon name="arrow-right" size={16} />
               </Link>
               <a
                 className="inline-flex min-h-12 items-center justify-center border-2 border-border bg-card px-6 font-semibold hover:bg-muted"
@@ -188,14 +151,17 @@ export default function Home() {
           <PixelStudyScene />
         </section>
 
-        {/* Steps / Flow Section (replaces generic about and redundant band) */}
+        {/* Steps / Flow Section */}
         <section
           className="border-t-2 border-border bg-card py-14 sm:py-20"
           id="alur"
         >
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
             <div className="max-w-2xl">
-              <h2 className="font-pixelify text-3xl leading-tight sm:text-4xl">
+              <p className="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                {copy.aboutLabel}
+              </p>
+              <h2 className="mt-1 font-pixelify text-3xl leading-tight sm:text-4xl">
                 {copy.stepsTitle}
               </h2>
               <p className="mt-3 text-base text-muted-foreground">
@@ -206,63 +172,121 @@ export default function Home() {
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               {copy.steps.map((step, index) => (
                 <div
-                  className="flex flex-col border-2 border-border bg-background p-5 shadow-[4px_4px_0_var(--border)]"
+                  className="flex flex-col justify-between border-2 border-border bg-background p-5 shadow-[4px_4px_0_var(--border)]"
                   key={step.title}
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="font-pixelify text-2xl font-bold text-link">
-                      0{index + 1}
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className={`size-3 ${
-                        index === 0
-                          ? "bg-moodi-sky"
-                          : index === 1
-                            ? "bg-moodi-butter"
-                            : "bg-moodi-pink"
-                      }`}
-                    />
+                  <div>
+                    <div className="flex items-center justify-between border-b-2 border-border/30 pb-3">
+                      <span className="font-mono text-xs font-bold uppercase text-muted-foreground">
+                        Langkah 0{index + 1}
+                      </span>
+                      <PixelIcon
+                        name={index === 0 ? "sun" : index === 1 ? "target" : "chart"}
+                        size={18}
+                        className="text-foreground"
+                      />
+                    </div>
+                    <h3 className="mt-4 font-pixelify text-xl font-bold">
+                      {step.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {step.description}
+                    </p>
                   </div>
-                  <h3 className="mt-4 font-pixelify text-xl font-bold">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    {step.description}
-                  </p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* Features Section: Asymmetrical Editorial Showcase */}
         <section className="border-t-2 border-border bg-muted py-14 sm:py-20" id="fitur">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-            <h2 className="font-pixelify text-3xl sm:text-4xl">
-              {copy.featuresTitle}
-            </h2>
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              {copy.features.map((feature, index) => (
-                <article
-                  className={`border-2 border-border p-6 text-ink shadow-[4px_4px_0_var(--border)] ${
-                    index === 0
-                      ? "bg-moodi-sky"
-                      : index === 1
-                        ? "bg-moodi-butter"
-                        : "bg-moodi-peach"
-                  }`}
-                  key={feature.title}
-                >
-                  <FeatureGlyph icon={feature.icon} />
-                  <h3 className="mt-5 font-pixelify text-xl font-bold">
-                    {feature.title}
+            <div className="max-w-2xl">
+              <p className="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                {copy.featuresLabel}
+              </p>
+              <h2 className="mt-1 font-pixelify text-3xl sm:text-4xl">
+                {copy.featuresTitle}
+              </h2>
+            </div>
+
+            <div className="mt-8 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+              {/* Lead Feature: Error Autopsy */}
+              <article className="flex flex-col justify-between border-2 border-border bg-card p-6 shadow-[4px_4px_0_var(--border)] sm:p-8">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold uppercase text-muted-foreground">
+                      Pembedahan Jawaban
+                    </span>
+                    <PixelIcon name="chart" size={24} className="text-foreground" />
+                  </div>
+                  <h3 className="mt-4 font-pixelify text-2xl font-bold sm:text-3xl">
+                    Error Autopsy
                   </h3>
-                  <p className="mt-2 text-sm leading-6">
-                    {feature.description}
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
+                    Membedakan apakah kamu salah karena materi memang belum paham atau karena waktu mepet dan panik saat tryout berlangsung.
+                  </p>
+
+                  {/* Concrete Error Cause Tags Demonstration */}
+                  <div className="mt-6 border-2 border-border/40 bg-background p-4">
+                    <p className="font-mono text-xs text-muted-foreground mb-3">
+                      Label penyebab salah yang dievaluasi:
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
+                      <div className="border border-border p-2 bg-card">
+                        <span className="font-semibold block">Belum paham</span>
+                        <span className="text-muted-foreground text-xs">Materi perlu diulas</span>
+                      </div>
+                      <div className="border border-border p-2 bg-card">
+                        <span className="font-semibold block">Kehabisan waktu</span>
+                        <span className="text-muted-foreground text-xs">Pacing belum terbiasa</span>
+                      </div>
+                      <div className="border border-border p-2 bg-card">
+                        <span className="font-semibold block">Panik / tegang</span>
+                        <span className="text-muted-foreground text-xs">Tekanan waktu ujian</span>
+                      </div>
+                      <div className="border border-border p-2 bg-card">
+                        <span className="font-semibold block">Kurang teliti</span>
+                        <span className="text-muted-foreground text-xs">Salah baca opsi</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              {/* Side Features: Check-in & Calm Room */}
+              <div className="flex flex-col gap-6">
+                <article className="border-2 border-border bg-card p-6 shadow-[4px_4px_0_var(--border)]">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold uppercase text-muted-foreground">
+                      Adaptif Harian
+                    </span>
+                    <PixelIcon name="sun" size={22} className="text-foreground" />
+                  </div>
+                  <h3 className="mt-3 font-pixelify text-xl font-bold">
+                    Check-in Harian
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Catat tidur, energi, mood, dan beban pikiran dalam 30 detik. Mode belajar otomatis menyesuaikan kapasitasmu: Pemulihan, Seimbang, atau Tantangan.
                   </p>
                 </article>
-              ))}
+
+                <article className="border-2 border-border bg-card p-6 shadow-[4px_4px_0_var(--border)]">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-bold uppercase text-muted-foreground">
+                      Dukungan Regulasi
+                    </span>
+                    <PixelIcon name="breathe" size={22} className="text-foreground" />
+                  </div>
+                  <h3 className="mt-3 font-pixelify text-xl font-bold">
+                    Ruang Tenang
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    Latihan pernapasan kotak 4-4-4-4, teknik grounding 5-4-3-2-1, dan reframing pikiran lokal saat cemas datang menjelang hari ujian.
+                  </p>
+                </article>
+              </div>
             </div>
           </div>
         </section>
@@ -305,6 +329,9 @@ export default function Home() {
             </p>
             <p className="mt-2 max-w-2xl text-xs font-semibold leading-5 text-muted-foreground">
               {copy.disclaimer}
+            </p>
+            <p className="mt-3 max-w-2xl text-xs text-muted-foreground">
+              {copy.iconCredit}
             </p>
           </div>
           <nav

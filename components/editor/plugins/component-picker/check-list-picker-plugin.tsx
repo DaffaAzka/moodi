@@ -5,7 +5,7 @@ import { $getRoot, $getSelection } from "lexical";
 import { INSERT_CHECK_LIST_COMMAND } from "@lexical/list";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
-import { ListTodo } from "lucide-react";
+import { PixelIcon } from "@/components/pixel";
 
 import {
   type ComponentPickerItem,
@@ -22,7 +22,7 @@ export function CheckListPickerPlugin() {
       {
         value: "check-list",
         label: t.checkListBlock,
-        icon: <ListTodo className="text-muted-foreground" />,
+        icon: <PixelIcon name="list-check" size={16} className="text-muted-foreground" />,
         keywords: ["check list", "todo list", "checkbox"],
         onSelect: () => {
           editor.update(() => {

@@ -10,6 +10,7 @@ import {
 import { siteCopy } from "@/lib/copy/id";
 import type { AdminLessonListItem } from "@/features/learn/types";
 import { AiDraftDialog } from "@/features/ai/components/ai-draft-dialog";
+import { PixelIcon } from "@/components/pixel";
 
 interface AdminLessonsListProps {
   topicId: string;
@@ -53,10 +54,11 @@ export function AdminLessonsList({
       {/* Top Header & Breadcrumb */}
       <div>
         <Link
-          className="text-xs font-semibold text-link underline underline-offset-4"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-link underline underline-offset-4"
           href="/dashboard/question-bank/topics"
         >
-          ← {siteCopy.questionBank.backToTopics}
+          <PixelIcon name="arrow-left" size={14} />
+          <span>{siteCopy.questionBank.backToTopics}</span>
         </Link>
         <div className="mt-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
           <span>{subtestName}</span>
@@ -75,18 +77,20 @@ export function AdminLessonsList({
 
           <div className="flex flex-wrap items-center gap-3">
             <button
-              className="pixel-press inline-flex min-h-11 items-center border-2 border-border bg-moodi-sky/30 px-4 text-xs font-bold text-ink hover:bg-moodi-sky/50"
+              className="pixel-press inline-flex min-h-11 items-center gap-1.5 border-2 border-border bg-moodi-sky/30 px-4 text-xs font-bold text-ink hover:bg-moodi-sky/50"
               onClick={() => setIsAiModalOpen(true)}
               type="button"
             >
-              ✨ {siteCopy.questionBank.draftWithAi}
+              <PixelIcon name="sparkle" size={16} />
+              <span>{siteCopy.questionBank.draftWithAi}</span>
             </button>
 
             <Link
-              className="pixel-press pixel-shadow inline-flex min-h-11 items-center border-2 border-border bg-moodi-sky px-4 text-xs font-bold text-ink hover:opacity-90"
+              className="pixel-press pixel-shadow inline-flex min-h-11 items-center gap-1.5 border-2 border-border bg-moodi-sky px-4 text-xs font-bold text-ink hover:opacity-90"
               href={`/dashboard/question-bank/topics/${topicId}/lessons/new`}
             >
-              + {siteCopy.questionBank.addLesson}
+              <PixelIcon name="plus" size={16} />
+              <span>{siteCopy.questionBank.addLesson}</span>
             </Link>
           </div>
         </div>
@@ -100,10 +104,11 @@ export function AdminLessonsList({
           </p>
           <div className="flex justify-center gap-3">
             <Link
-              className="pixel-press pixel-shadow inline-flex min-h-11 items-center border-2 border-border bg-moodi-sky px-5 text-xs font-bold text-ink"
+              className="pixel-press pixel-shadow inline-flex min-h-11 items-center gap-1.5 border-2 border-border bg-moodi-sky px-5 text-xs font-bold text-ink"
               href={`/dashboard/question-bank/topics/${topicId}/lessons/new`}
             >
-              + Buat Materi Pertama
+              <PixelIcon name="plus" size={16} />
+              <span>Buat Materi Pertama</span>
             </Link>
           </div>
         </div>
@@ -139,7 +144,7 @@ export function AdminLessonsList({
                           onClick={() => handleReorder(lesson.id, "up")}
                           type="button"
                         >
-                          ▲
+                          <PixelIcon name="chevron-up" size={12} />
                         </button>
                         <button
                           aria-label="Turunkan urutan"
@@ -148,7 +153,7 @@ export function AdminLessonsList({
                           onClick={() => handleReorder(lesson.id, "down")}
                           type="button"
                         >
-                          ▼
+                          <PixelIcon name="chevron-down" size={12} />
                         </button>
                       </div>
                     </td>
@@ -189,7 +194,7 @@ export function AdminLessonsList({
                     <td className="px-4 py-3 text-xs">
                       {lesson.source === "ai_assisted" ? (
                         <span className="inline-flex items-center gap-1 text-primary font-medium">
-                          ✨ AI {lesson.reviewedAt ? "(Ditinjau)" : "(Draf)"}
+                          <PixelIcon name="sparkle" size={14} /> AI {lesson.reviewedAt ? "(Ditinjau)" : "(Draf)"}
                         </span>
                       ) : (
                         <span className="text-muted-foreground">Manual</span>

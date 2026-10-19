@@ -5,6 +5,7 @@ import { getSubtests } from "@/features/question-bank/queries";
 import { getAuthSession } from "@/lib/auth-session";
 import { siteCopy } from "@/lib/copy/id";
 import { getUserRole } from "@/lib/user-role";
+import { PixelIcon } from "@/components/pixel";
 
 const copy = siteCopy.questionBank;
 
@@ -23,10 +24,11 @@ export default async function SubtestsPage() {
     <main className="min-w-0 flex-1 px-4 pb-24 py-8 sm:px-6 lg:px-10 lg:pb-8">
       <div className="mx-auto max-w-5xl">
         <Link
-          className="text-sm font-semibold text-link underline underline-offset-4"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-link underline underline-offset-4"
           href="/dashboard/question-bank"
         >
-          ← {copy.backToBank}
+          <PixelIcon name="arrow-left" size={16} />
+          <span>{copy.backToBank}</span>
         </Link>
         <h1 className="mt-4 font-pixelify text-4xl leading-tight sm:text-5xl">
           {copy.subtestsTitle}

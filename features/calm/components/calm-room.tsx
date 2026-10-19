@@ -3,31 +3,18 @@
 import { useState, useEffect, useTransition } from "react";
 import { saveCalmSessionAction, reframeThoughtAction } from "../actions";
 import type { ReframedThoughtResult } from "@/lib/cbt/thought-reframe";
-import {
-  BulbIcon,
-  CheckIcon,
-  EarIcon,
-  EyeIcon,
-  HandIcon,
-  HeartIcon,
-  NoseIcon,
-  PencilIcon,
-  SproutIcon,
-  TasteIcon,
-  ThoughtIcon,
-  WindIcon,
-} from "@/components/icons";
+import { PixelIcon, type PixelIconName } from "@/components/pixel";
 
 type CalmTab = "breathing" | "grounding" | "reframing" | "journal";
 
-export function CalmRoom({ userName = "" }: { userName?: string }) {
+export function CalmRoom({ userName: _userName = "" }: { userName?: string }) {
   const [activeTab, setActiveTab] = useState<CalmTab>("breathing");
 
-  const tabs: Array<{ id: CalmTab; label: string; icon: typeof WindIcon }> = [
-    { id: "breathing", label: "Napas", icon: WindIcon },
-    { id: "grounding", label: "Grounding", icon: SproutIcon },
-    { id: "reframing", label: "Reframe", icon: BulbIcon },
-    { id: "journal", label: "Jurnal", icon: PencilIcon },
+  const tabs: Array<{ id: CalmTab; label: string; icon: PixelIconName }> = [
+    { id: "breathing", label: "Napas", icon: "breathe" },
+    { id: "grounding", label: "Grounding", icon: "sprout" },
+    { id: "reframing", label: "Reframe", icon: "bulb" },
+    { id: "journal", label: "Jurnal", icon: "edit" },
   ];
 
   return (
@@ -46,7 +33,6 @@ export function CalmRoom({ userName = "" }: { userName?: string }) {
       {/* Tabs Switcher */}
       <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap border-b-2 border-border pb-4">
         {tabs.map((tab) => {
-          const Icon = tab.icon;
           const isActive = activeTab === tab.id;
 
           return (
@@ -59,7 +45,7 @@ export function CalmRoom({ userName = "" }: { userName?: string }) {
               onClick={() => setActiveTab(tab.id)}
               type="button"
             >
-              <Icon className="size-4 shrink-0" />
+              <PixelIcon name={tab.icon} size={16} />
               <span>{tab.label}</span>
             </button>
           );
@@ -201,46 +187,51 @@ function GroundingExercise() {
   const [step, setStep] = useState<number>(1);
   const [completed, setCompleted] = useState<boolean>(false);
 
-  const steps = [
+  const steps: Array<{
+    num: number;
+    title: string;
+    prompt: string;
+    icon: PixelIconName;
+    color: string;
+  }> = [
     {
       num: 5,
       title: "5 Hal yang Kamu Lihat",
       prompt: "Lihat sekelilingmu. Sadari 5 benda yang kamu lihat (misalnya meja, pensil, jendela, buku, atau bayangan cahaya).",
-      icon: EyeIcon,
+      icon: "eye",
       color: "bg-moodi-sky/30",
     },
     {
       num: 4,
       title: "4 Hal yang Bisa Kamu Sentuh",
       prompt: "Rasakan 4 sensasi fisik di tubuhmu saat ini (telapak kaki di lantai, tekstur meja, kain pakaian, atau aliran udara).",
-      icon: HandIcon,
+      icon: "hand",
       color: "bg-moodi-butter/30",
     },
     {
       num: 3,
       title: "3 Suara yang Kamu Dengar",
       prompt: "Dengarkan lingkunganmu. Kenali 3 suara di sekitarmu (deru kipas angin, kendaraan di luar, atau helaan napasmu sendiri).",
-      icon: EarIcon,
+      icon: "ear",
       color: "bg-moodi-pink/30",
     },
     {
       num: 2,
       title: "2 Aroma yang Kamu Cium",
       prompt: "Hiruplah udara di sekitarmu. Sadari 2 aroma di ruanganmu (kertas buku, wangi pakaian, atau udara segar).",
-      icon: NoseIcon,
+      icon: "nose",
       color: "bg-moodi-peach/30",
     },
     {
       num: 1,
       title: "1 Rasa di Mulut atau Napas Dalam",
       prompt: "Rasakan satu hal di indera pengecapmu (teguk air putih, atau ambil 1 tarikan napas paling dalam dan penuh).",
-      icon: TasteIcon,
+      icon: "taste",
       color: "bg-muted",
     },
   ];
 
   const current = steps[step - 1] ?? steps[0]!;
-  const StepIcon = current.icon;
 
   async function handleNext() {
     if (step < 5) {
@@ -271,7 +262,7 @@ function GroundingExercise() {
         <div className={`space-y-5 border-2 border-border p-5 sm:p-7 ${current.color}`}>
           <div className="flex items-center gap-3">
             <span className="grid size-10 place-items-center border-2 border-border bg-card text-foreground">
-              <StepIcon className="size-5" />
+              <PixelIcon name={current.icon} size={20} />
             </span>
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -289,18 +280,19 @@ function GroundingExercise() {
 
           <div className="pt-2">
             <button
-              className="pixel-press inline-flex min-h-11 items-center justify-center border-2 border-border bg-card px-5 py-2 text-xs font-bold text-foreground shadow-[2px_2px_0_var(--border)] hover:bg-muted sm:text-sm"
+              className="pixel-press inline-flex min-h-11 items-center justify-center gap-1.5 border-2 border-border bg-card px-5 py-2 text-xs font-bold text-foreground shadow-[2px_2px_0_var(--border)] hover:bg-muted sm:text-sm"
               onClick={handleNext}
               type="button"
             >
-              <span>{step < 5 ? "Lanjut →" : "Selesai latihan"}</span>
+              <span>{step < 5 ? "Lanjut" : "Selesai latihan"}</span>
+              {step < 5 && <PixelIcon name="arrow-right" size={14} />}
             </button>
           </div>
         </div>
       ) : (
         <div className="space-y-4 border-2 border-border bg-moodi-sky/30 p-6 text-center sm:p-8">
           <div className="mx-auto grid size-12 place-items-center border-2 border-border bg-card">
-            <SproutIcon className="size-6 text-foreground" />
+            <PixelIcon name="sprout" size={24} className="text-foreground" />
           </div>
           <h3 className="font-pixelify text-2xl font-bold text-foreground">
             Pikiranmu Sudah Lebih Hadir
@@ -496,7 +488,7 @@ function ReframingCards() {
 
             {/* Small Action Step */}
             <div className="flex items-start gap-2.5 border border-border bg-card p-3">
-              <BulbIcon className="mt-0.5 size-4 shrink-0 text-foreground" />
+              <PixelIcon name="bulb" size={16} className="mt-0.5 shrink-0 text-foreground" />
               <div className="space-y-0.5">
                 <span className="text-xs font-bold text-foreground">
                   Langkah Kecil:
@@ -560,7 +552,12 @@ function ReframingCards() {
                     {isFlipped ? "Fakta Nyata" : "Pikiran Otomatis"}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {isFlipped ? "Tutup" : "Balik →"}
+                    {isFlipped ? "Tutup" : (
+                      <span className="inline-flex items-center gap-1">
+                        <span>Balik</span>
+                        <PixelIcon name="arrow-right" size={12} />
+                      </span>
+                    )}
                   </span>
                 </div>
 
@@ -623,7 +620,7 @@ function PrivateJournal() {
 
       {saved && (
         <div className="inline-flex items-center gap-1.5 border-2 border-border bg-moodi-sky/30 p-2.5 text-xs font-semibold text-ink">
-          <CheckIcon className="size-3.5" />
+          <PixelIcon name="check" size={14} />
           <span>Catatan refleksimu telah tersimpan.</span>
         </div>
       )}

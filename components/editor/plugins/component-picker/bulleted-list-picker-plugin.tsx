@@ -5,7 +5,7 @@ import { $getRoot, $getSelection } from "lexical";
 import { INSERT_UNORDERED_LIST_COMMAND } from "@lexical/list";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
-import { List } from "lucide-react";
+import { PixelIcon } from "@/components/pixel";
 
 import {
   type ComponentPickerItem,
@@ -22,7 +22,7 @@ export function BulletedListPickerPlugin() {
       {
         value: "bulleted-list",
         label: t.bulletedListBlock,
-        icon: <List className="text-muted-foreground" />,
+        icon: <PixelIcon name="list" size={16} className="text-muted-foreground" />,
         keywords: ["bulleted list", "unordered list", "ul"],
         onSelect: () => {
           editor.update(() => {

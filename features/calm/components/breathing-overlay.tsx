@@ -58,13 +58,13 @@ function ActiveBreathingOverlay({
       role="dialog">
       <div className="pixel-shadow flex max-w-md w-full flex-col items-center justify-between border-2 border-border bg-card p-6 text-center sm:p-8">
         <div className="space-y-1">
-          <span className="inline-block border border-border bg-moodi-peach px-2.5 py-0.5 text-xs font-semibold text-ink">
+          <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground">
             {siteCopy.practice.panicButton}
-          </span>
+          </p>
           <h2
             className="font-pixelify text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
             id="breathing-title">
-            Tarik Nafas Sejenak
+            Tarik Napas Sejenak
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground">
             {isFullSimulation ?

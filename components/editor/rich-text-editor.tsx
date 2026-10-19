@@ -83,6 +83,7 @@ import { DividerPickerPlugin } from "@/components/editor/plugins/component-picke
 import { CollapsiblePickerPlugin } from "@/components/editor/plugins/component-picker/collapsible-picker-plugin";
 import { LanguageProvider } from "@/components/editor/plugins/i18n-plugin";
 import { siteCopy } from "@/lib/copy/id";
+import { PixelIcon } from "@/components/pixel";
 import type { SerializedEditorStateJson } from "@/lib/editor/validate-lexical";
 
 export type RichTextEditorVariant = "lesson" | "question" | "option";
@@ -480,7 +481,8 @@ function EditorToolbar({ variant }: EditorToolbarProps) {
           title={copy.link}
           aria-label={copy.link}
         >
-          🔗 {copy.link}
+          <PixelIcon name="link" size={12} className="inline mr-1" />
+          <span>{copy.link}</span>
         </button>
       )}
 
@@ -491,7 +493,7 @@ function EditorToolbar({ variant }: EditorToolbarProps) {
         title={copy.equation}
         aria-label={copy.equation}
       >
-        ∑ {copy.equation}
+        <span className="font-serif">∑</span> {copy.equation}
       </button>
 
       {variant !== "option" && (
@@ -503,7 +505,8 @@ function EditorToolbar({ variant }: EditorToolbarProps) {
             title={copy.table}
             aria-label={copy.table}
           >
-            ▦ {copy.table}
+            <PixelIcon name="table" size={12} className="inline mr-1" />
+            <span>{copy.table}</span>
           </button>
           <button
             type="button"
@@ -512,7 +515,8 @@ function EditorToolbar({ variant }: EditorToolbarProps) {
             title={copy.divider}
             aria-label={copy.divider}
           >
-            ― {copy.divider}
+            <PixelIcon name="divider" size={12} className="inline mr-1" />
+            <span>{copy.divider}</span>
           </button>
           <button
             type="button"
@@ -521,7 +525,8 @@ function EditorToolbar({ variant }: EditorToolbarProps) {
             title={copy.collapsible}
             aria-label={copy.collapsible}
           >
-            ▼ {copy.collapsible}
+            <PixelIcon name="collapse" size={12} className="inline mr-1" />
+            <span>{copy.collapsible}</span>
           </button>
         </>
       )}
