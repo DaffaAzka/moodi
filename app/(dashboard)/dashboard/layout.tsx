@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/sidebar";
 import { SignOutButton } from "@/components/sign-out-button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { HeartIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 import { getAuthSession } from "@/lib/auth-session";
 import { siteCopy } from "@/lib/copy/id";
 import { getUserRole } from "@/lib/user-role";
@@ -54,7 +54,7 @@ async function AuthenticatedDashboardLayout({
                 href="/dashboard/support"
                 title="Bantuan & Dukungan"
               >
-                <HeartIcon className="size-4" />
+                <PixelIcon name="support" size={16} />
               </Link>
               <ThemeToggle />
               <SignOutButton />

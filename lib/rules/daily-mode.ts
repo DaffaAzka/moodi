@@ -89,7 +89,7 @@ export function evaluateDailyMode(
       mode: "challenge",
       ruleKey: "challenge",
       reason:
-        "Tidur cukup dan energimu prima hari ini. Waktu yang tepat untuk simulasi penuh atau mengerjakan target soal menantang!",
+        "Tidur cukup dan energimu prima hari ini. Waktu yang tepat untuk simulasi penuh atau mengerjakan target soal menantang.",
       isReferralTriggered,
     };
   }

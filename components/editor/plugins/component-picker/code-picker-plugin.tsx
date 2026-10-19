@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
-import { CodeXml } from "lucide-react";
+import { PixelIcon } from "@/components/pixel";
 
 import { insertCodeBlock } from "@/components/editor/extensions/code";
 import {
@@ -20,7 +20,7 @@ export function CodePickerPlugin() {
       {
         value: "code-block",
         label: t.insertCodeBlock,
-        icon: <CodeXml className="text-muted-foreground" />,
+        icon: <PixelIcon name="code" size={16} className="text-muted-foreground" />,
         keywords: ["code", "codeblock", "javascript", "python", "js"],
         onSelect: () => insertCodeBlock(editor),
       },

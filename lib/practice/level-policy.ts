@@ -73,7 +73,7 @@ export function getAllowedLevels(
     {
       level: "timed",
       label: "Latihan waktu",
-      description: "Timer longgar, berhenti saat Nafas dulu",
+      description: "Timer longgar, berhenti saat Napas dulu",
       recommended: mode === "balanced",
       recoveryNotice:
         isRecovery ?

@@ -4,13 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { recordSupportEventAction } from "../actions";
 import type { SupportResourceItem } from "../queries";
-import {
-  CheckIcon,
-  CopyIcon,
-  PhoneIcon,
-  PinIcon,
-  WindIcon,
-} from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 
 interface SupportDirectoryProps {
   resources: SupportResourceItem[];
@@ -75,14 +69,14 @@ export function SupportDirectory({ resources }: SupportDirectoryProps) {
             className="pixel-press inline-flex items-center gap-2 border-2 border-border bg-moodi-sky px-4 py-2 text-xs font-bold text-ink shadow-[2px_2px_0_var(--border)]"
             href="/dashboard/calm"
           >
-            <WindIcon className="size-3.5" />
+            <PixelIcon name="breathe" size={14} />
             <span>Latihan napas di Ruang Tenang</span>
           </Link>
           <a
             className="pixel-press inline-flex items-center gap-2 border-2 border-border bg-card px-4 py-2 text-xs font-bold text-foreground shadow-[2px_2px_0_var(--border)] hover:bg-muted"
             href="#hotline"
           >
-            <PhoneIcon className="size-3.5" />
+            <PixelIcon name="phone" size={14} />
             <span>Kontak layanan darurat</span>
           </a>
         </div>
@@ -115,7 +109,7 @@ export function SupportDirectory({ resources }: SupportDirectoryProps) {
             >
               <div>
                 <div className="flex items-center justify-between gap-2 border-b border-border/40 pb-2">
-                  <span className="border border-border bg-moodi-sky/30 px-2 py-0.5 text-[10px] font-bold text-foreground">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Hotline Resmi
                   </span>
                   {res.lastVerifiedAt && (
@@ -191,7 +185,7 @@ export function SupportDirectory({ resources }: SupportDirectoryProps) {
                 className="flex items-center gap-2 border border-border bg-background p-3 text-xs font-medium text-foreground"
                 key={c.id}
               >
-                <PinIcon className="size-3.5 shrink-0 text-foreground" />
+                <PixelIcon name="pin" size={14} className="shrink-0 text-foreground" />
                 <span>
                   <strong>{c.name}:</strong> {c.contact ?? "Hubungi ruang BK sekolahmu"}
                 </span>
@@ -240,12 +234,12 @@ export function SupportDirectory({ resources }: SupportDirectoryProps) {
               >
                 {copiedIndex === i ? (
                   <>
-                    <CheckIcon className="size-3.5" />
-                    <span>Tersalin!</span>
+                    <PixelIcon name="check" size={14} />
+                    <span>Tersalin</span>
                   </>
                 ) : (
                   <>
-                    <CopyIcon className="size-3.5" />
+                    <PixelIcon name="copy" size={14} />
                     <span>Salin pesan</span>
                   </>
                 )}

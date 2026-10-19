@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { $getRoot, $getSelection, type LexicalEditor } from "lexical";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { INSERT_TABLE_COMMAND } from "@lexical/table";
-import { Table } from "lucide-react";
+import { PixelIcon } from "@/components/pixel";
 
 import {
   type ComponentPickerItem,
@@ -37,7 +37,7 @@ export function TablePickerPlugin() {
       {
         value: "table",
         label: t.insertTable,
-        icon: <Table className="text-muted-foreground" />,
+        icon: <PixelIcon name="table" size={16} className="text-muted-foreground" />,
         keywords: ["table", "grid", "spreadsheet", "rows", "columns"],
         onSelect: () => insertTable(editor, 3, 3),
       },
@@ -60,7 +60,7 @@ export function TablePickerPlugin() {
       items.push({
         value: `table-${rows}x${columns}`,
         label: `${rows}x${columns} ${t.insertTable}`,
-        icon: <Table className="text-muted-foreground" />,
+        icon: <PixelIcon name="table" size={16} className="text-muted-foreground" />,
         keywords: ["table", `${rows}x${columns}`],
         onSelect: () => insertTable(editor, rows, columns),
       });

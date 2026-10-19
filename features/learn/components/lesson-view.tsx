@@ -7,7 +7,7 @@ import { CheckQuestions } from "./check-questions";
 import { markLessonCompletedAction, markLessonViewedAction } from "@/features/learn/actions";
 import { siteCopy } from "@/lib/copy/id";
 import type { LessonDetailData } from "@/features/learn/types";
-import { CheckIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 
 interface LessonViewProps {
   lesson: LessonDetailData;
@@ -41,10 +41,11 @@ export function LessonView({ lesson }: LessonViewProps) {
       {/* Top Navigation & Breadcrumb */}
       <nav aria-label="Breadcrumb" className="space-y-3">
         <Link
-          className="inline-flex items-center text-xs font-semibold text-link underline underline-offset-4"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-link underline underline-offset-4"
           href="/dashboard/study"
         >
-          ← {siteCopy.learn.backToLessons}
+          <PixelIcon name="arrow-left" size={12} />
+          <span>{siteCopy.learn.backToLessons}</span>
         </Link>
         <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-muted-foreground">
           <span>{lesson.subtestName}</span>
@@ -54,18 +55,18 @@ export function LessonView({ lesson }: LessonViewProps) {
       </nav>
 
       {/* Lesson Header */}
-      <header className="space-y-4 border-b-2 border-border pb-6">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="border-2 border-border bg-muted px-2.5 py-0.5 text-xs font-semibold text-foreground">
+      <header className="space-y-3 border-b-2 border-border pb-6">
+        <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-muted-foreground">
+          <span>
             {siteCopy.learn.estMinutes.replace(
               "{minutes}",
               String(lesson.estMinutes),
             )}
           </span>
           {isCompleted && (
-            <span className="inline-flex items-center gap-1.5 border-2 border-border bg-moodi-sky/30 px-2.5 py-0.5 text-xs font-semibold text-ink">
-              <CheckIcon className="size-3.5" />
-              {siteCopy.learn.markedCompleted}
+            <span className="inline-flex items-center gap-1 font-semibold text-foreground">
+              <PixelIcon name="check" size={14} className="text-primary" />
+              <span>{siteCopy.learn.markedCompleted}</span>
             </span>
           )}
         </div>
@@ -80,12 +81,11 @@ export function LessonView({ lesson }: LessonViewProps) {
           </p>
         )}
 
-        {/* AI Assisted & Reviewed Badge */}
+        {/* AI Assisted & Reviewed: Quiet line under title, not a badge */}
         {isAiReviewed && (
-          <div className="border-2 border-border bg-moodi-sky/15 p-3 text-xs font-medium text-ink flex items-center gap-2">
-            <span className="font-bold text-primary">ℹ</span>
-            <span>{siteCopy.learn.aiAssistedNotice}</span>
-          </div>
+          <p className="text-xs text-muted-foreground pt-1">
+            {siteCopy.learn.aiAssistedNotice}
+          </p>
         )}
       </header>
 
@@ -119,7 +119,7 @@ export function LessonView({ lesson }: LessonViewProps) {
             ) : (
               <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <span className="flex size-6 items-center justify-center border-2 border-border bg-moodi-sky text-ink">
-                  ✓
+                  <PixelIcon name="check" size={12} />
                 </span>
                 <span>{siteCopy.learn.markedCompleted}</span>
               </div>
@@ -128,18 +128,20 @@ export function LessonView({ lesson }: LessonViewProps) {
 
           <div className="flex flex-wrap items-center gap-3">
             <Link
-              className="pixel-press inline-flex min-h-11 items-center border-2 border-border bg-card px-4 text-xs font-semibold hover:bg-muted"
+              className="pixel-press inline-flex min-h-11 items-center gap-1.5 border-2 border-border bg-card px-4 text-xs font-semibold hover:bg-muted"
               href={`/dashboard/mock-exam?tab=topic&topicId=${lesson.topicId}`}
             >
-              {siteCopy.learn.practiceTopic} →
+              <span>{siteCopy.learn.practiceTopic}</span>
+              <PixelIcon name="arrow-right" size={12} />
             </Link>
 
             {lesson.nextLessonId && (
               <Link
-                className="pixel-press pixel-shadow inline-flex min-h-11 items-center border-2 border-border bg-foreground px-5 text-xs font-semibold text-background hover:opacity-90"
+                className="pixel-press pixel-shadow inline-flex min-h-11 items-center gap-1.5 border-2 border-border bg-foreground px-5 text-xs font-semibold text-background hover:opacity-90"
                 href={`/dashboard/study/lessons/${lesson.nextLessonId}`}
               >
-                {siteCopy.learn.nextLesson} →
+                <span>{siteCopy.learn.nextLesson}</span>
+                <PixelIcon name="arrow-right" size={12} />
               </Link>
             )}
           </div>

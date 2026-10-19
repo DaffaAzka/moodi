@@ -165,3 +165,11 @@ Untuk meringankan beban komputasi server saat terjadi lonjakan trafik:
 
 - [ ] Gunakan **Vercel Analytics** & **Vercel Logs** untuk memantau lonjakan P99 latency atau respons HTTP 429 / 5xx.
 - [ ] Aktifkan notifikasi Webhook atau integrasikan **Axiom** / **Datadog** (via Vercel Integrations) untuk menerima *alert* di Discord, Slack, atau Email saat terjadi anomali lonjakan trafik lebih dari 500% dalam 5 menit.
+
+---
+
+## 6. Atribusi & Lisensi
+
+- Ikon antarmuka menggunakan **[Pixel Icon Library](https://github.com/hackernoon/pixel-icon-library)** oleh **HackerNoon**, dilisensikan di bawah **Creative Commons Attribution 4.0 International (CC BY 4.0)**.
+- Desain tipografi menggunakan Geist (SIL Open Font License) dan Pixelify Sans (SIL Open Font License).
+

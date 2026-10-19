@@ -5,12 +5,7 @@ import Link from "next/link";
 import type { StudentDashboardData } from "../queries";
 import { toggleTaskStatusAction, swapTaskAction } from "../actions";
 import { ActiveSessionCard } from "@/features/practice/components/active-session-card";
-import {
-  ArrowRightIcon,
-  CheckIcon,
-  PencilIcon,
-  SproutIcon,
-} from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 
 interface DailyPlanViewProps {
   data: StudentDashboardData;
@@ -99,10 +94,10 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
           className="pixel-shadow flex flex-col gap-3 border-2 border-border bg-moodi-peach/40 p-4 sm:flex-row sm:items-center sm:justify-between"
         >
           <div className="space-y-1">
-            <span className="inline-flex items-center gap-1.5 border border-border bg-card px-2 py-0.5 text-xs font-bold text-ink">
-              <SproutIcon className="size-3.5 text-foreground" />
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-muted-foreground">
+              <PixelIcon name="support" size={16} />
               <span>Ruang Dukungan</span>
-            </span>
+            </div>
             <h3 className="font-semibold text-foreground">
               Beberapa hari ini terasa berat. Kamu tidak harus menghadapinya sendirian.
             </h3>
@@ -111,11 +106,11 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
             </p>
           </div>
           <Link
-            className="pixel-press inline-flex shrink-0 items-center justify-center gap-1 border-2 border-border bg-card px-3 py-1.5 text-xs font-bold text-foreground shadow-[2px_2px_0_var(--border)] hover:bg-muted"
+            className="pixel-press inline-flex shrink-0 items-center justify-center gap-1.5 border-2 border-border bg-card px-3 py-1.5 text-xs font-bold text-foreground shadow-[2px_2px_0_var(--border)] hover:bg-muted"
             href="/dashboard/support"
           >
             <span>Kontak bantuan</span>
-            <ArrowRightIcon className="size-3.5" />
+            <PixelIcon name="arrow-right" size={14} />
           </Link>
         </aside>
       )}
@@ -126,14 +121,12 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
         className={`pixel-shadow border-2 border-border ${modeConfig.bg} p-5 sm:p-7 space-y-4`}
       >
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-3">
-          <div className="flex items-center gap-2">
-            <span
-              className={`border-2 border-border px-3 py-1 font-pixelify text-xs font-bold ${modeConfig.badgeBg} text-ink`}
-            >
+          <div className="flex items-center gap-3">
+            <span className="font-pixelify text-sm font-bold text-foreground tracking-wide">
               {modeConfig.title}
             </span>
             {daysUntilExam !== null && (
-              <span className="border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground">
+              <span className="text-xs font-mono text-muted-foreground">
                 {daysUntilExam} hari menuju UTBK
               </span>
             )}
@@ -145,7 +138,7 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
               onClick={onEditCheckin}
               type="button"
             >
-              <PencilIcon className="size-3" />
+              <PixelIcon name="edit" size={14} />
               <span>Ubah kondisi</span>
             </button>
           )}
@@ -163,14 +156,14 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
           </p>
         </div>
 
-        {/* Streamlined Condition Snapshot (Replaces 4 duplicate stat cards) */}
+        {/* Streamlined Condition Snapshot */}
         {todayCheckin && (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border/40 pt-3 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border/40 pt-3 text-xs text-muted-foreground font-mono">
             <span>
-              Kondisi: Tidur {todayCheckin.sleepHours}j · Energi {todayCheckin.energy}/5 · Mood {todayCheckin.mood}/5 · Stres {todayCheckin.stress}/5
+              Tidur {todayCheckin.sleepHours}j · Energi {todayCheckin.energy}/5 · Mood {todayCheckin.mood}/5 · Stres {todayCheckin.stress}/5
             </span>
             {todayCheckin.note && (
-              <span className="italic text-foreground">
+              <span className="italic font-sans text-foreground">
                 · &ldquo;{todayCheckin.note}&rdquo;
               </span>
             )}
@@ -191,7 +184,7 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
 
       {/* Today's Tasks */}
       <section aria-labelledby="tasks-heading" className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-baseline justify-between">
           <div>
             <h2
               className="font-pixelify text-xl font-bold tracking-tight text-foreground sm:text-2xl"
@@ -205,20 +198,20 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {todayPlan.tasks.map((task) => {
+        <div className="space-y-3">
+          {todayPlan.tasks.map((task, index) => {
             const isDone = task.status === "done";
             const isToggling = togglingTaskId === task.id;
             const isSwapping = swappingTaskId === task.id;
 
             const typeConfig = {
-              lesson: { label: "Materi Belajar", badge: "bg-moodi-sky" },
-              review: { label: "Ulasan Materi", badge: "bg-moodi-sky" },
-              practice: { label: "Latihan Soal", badge: "bg-moodi-butter" },
-              tryout: { label: "Simulasi Tryout", badge: "bg-moodi-pink" },
-              calm: { label: "Ruang Tenang", badge: "bg-moodi-peach" },
-              rest: { label: "Istirahat", badge: "bg-muted" },
-            }[task.type] ?? { label: "Tugas", badge: "bg-card" };
+              lesson: { label: "Materi Konsep", icon: "book" as const },
+              review: { label: "Ulasan Catatan", icon: "target" as const },
+              practice: { label: "Latihan Soal", icon: "timer" as const },
+              tryout: { label: "Simulasi Tryout", icon: "chart" as const },
+              calm: { label: "Ruang Tenang", icon: "breathe" as const },
+              rest: { label: "Istirahat", icon: "sleep" as const },
+            }[task.type] ?? { label: "Tugas", icon: "target" as const };
 
             const targetHref =
               task.type === "lesson" && (task as any).lessonId
@@ -233,42 +226,44 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
               <article
                 className={`pixel-shadow flex flex-col justify-between border-2 border-border p-4 transition-all sm:p-5 ${
                   isDone
-                    ? "bg-muted/70 opacity-75"
-                    : "bg-card hover:bg-card/90"
+                    ? "bg-muted/50 opacity-70"
+                    : index === 0 && !isDone
+                      ? "bg-card border-l-4 border-l-moodi-sky"
+                      : "bg-card"
                 }`}
                 key={task.id}
               >
-                <div>
-                  <div className="flex items-start justify-between gap-2">
-                    <span
-                      className={`border border-border px-2.5 py-0.5 text-[11px] font-bold text-ink ${typeConfig.badge}`}
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <PixelIcon name={typeConfig.icon} size={16} className="text-muted-foreground" />
+                      <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                        {typeConfig.label}
+                      </span>
+                      <span className="text-muted-foreground text-xs">·</span>
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {task.estMinutes} mnt
+                      </span>
+                    </div>
+
+                    <h3
+                      className={`mt-2 text-base font-bold sm:text-lg ${
+                        isDone
+                          ? "line-through text-muted-foreground"
+                          : "text-foreground"
+                      }`}
                     >
-                      {typeConfig.label}
-                    </span>
-                    <span className="text-xs font-mono text-muted-foreground">
-                      {task.estMinutes} mnt
-                    </span>
+                      {task.title}
+                    </h3>
+
+                    {task.reason && (
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        {task.reason}
+                      </p>
+                    )}
                   </div>
 
-                  <h3
-                    className={`mt-3 text-base font-bold leading-snug ${
-                      isDone
-                        ? "line-through text-muted-foreground"
-                        : "text-foreground"
-                    }`}
-                  >
-                    {task.title}
-                  </h3>
-
-                  {task.reason && (
-                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                      {task.reason}
-                    </p>
-                  )}
-                </div>
-
-                <div className="mt-5 space-y-3 border-t border-border/40 pt-3">
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="mt-3 flex items-center gap-2 shrink-0 sm:mt-0">
                     <button
                       className={`pixel-press inline-flex min-h-9 items-center gap-1.5 border-2 border-border px-3 py-1 text-xs font-bold ${
                         isDone
@@ -279,12 +274,12 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
                       onClick={() => handleToggle(task.id, task.status)}
                       type="button"
                     >
-                      {isDone && <CheckIcon className="size-3.5" />}
+                      {isDone && <PixelIcon name="check" size={12} />}
                       <span>{isDone ? "Selesai" : "Tandai selesai"}</span>
                     </button>
 
                     <button
-                      className="text-xs text-muted-foreground underline hover:text-foreground disabled:opacity-50"
+                      className="text-xs text-muted-foreground underline hover:text-foreground disabled:opacity-50 px-1"
                       disabled={isSwapping || isDone}
                       onClick={() => handleSwap(task.id)}
                       title="Ganti dengan pilihan topik alternatif"
@@ -292,17 +287,17 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
                     >
                       {isSwapping ? "..." : "Ganti"}
                     </button>
-                  </div>
 
-                  {!isDone && (
-                    <Link
-                      className="pixel-press pixel-shadow flex w-full items-center justify-center gap-1.5 border-2 border-border bg-moodi-sky py-2 text-xs font-bold text-ink hover:bg-moodi-sky/90"
-                      href={targetHref}
-                    >
-                      <span>Mulai</span>
-                      <ArrowRightIcon className="size-3.5" />
-                    </Link>
-                  )}
+                    {!isDone && (
+                      <Link
+                        className="pixel-press inline-flex min-h-9 items-center justify-center gap-1.5 border-2 border-border bg-moodi-sky px-4 text-xs font-bold text-ink hover:bg-moodi-sky/90"
+                        href={targetHref}
+                      >
+                        <span>Mulai</span>
+                        <PixelIcon name="arrow-right" size={12} />
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </article>
             );

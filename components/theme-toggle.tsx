@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { PixelIcon } from "@/components/pixel";
 import {
   siteCopy,
   themeOptions,
@@ -67,9 +68,11 @@ export function ThemeToggle() {
       aria-label={`${siteCopy.navigation.themeLabel}: ${themeName}`}
       title={`${siteCopy.navigation.themeLabel}: ${themeName}`}
     >
-      <span aria-hidden="true" className="font-pixelify text-lg">
-        ◐
-      </span>
+      <PixelIcon
+        name={theme === "light" ? "sun" : theme === "night" ? "moon" : "theme"}
+        size={16}
+        aria-hidden="true"
+      />
       <span className="hidden sm:inline">{themeName}</span>
     </button>
   );

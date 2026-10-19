@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { ArrowRightIcon, CheckIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 import { submitCheckinAction } from "../actions";
 
 interface CheckinFormProps {
@@ -89,10 +89,10 @@ export function CheckinForm({
       {/* Header */}
       <div className="border-b-2 border-border pb-4">
         <h2 className="font-pixelify text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-          Bagaimana kondisimu hari ini?
+          Hari ini kamu gimana?
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Jawabanmu menentukan beban belajar harian: Pemulihan, Seimbang, atau Gas Pol.
+          Jawabanmu menentukan beban belajar harian: Pemulihan, Seimbang, atau Tantangan.
         </p>
       </div>
 
@@ -302,7 +302,7 @@ export function CheckinForm({
           ) : (
             <>
               <span>Buka rencana hari ini</span>
-              <ArrowRightIcon className="size-5" />
+              <PixelIcon name="arrow-right" size={20} />
             </>
           )}
         </button>

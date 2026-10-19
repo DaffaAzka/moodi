@@ -1,8 +1,8 @@
 export const siteCopy = {
   metadata: {
-    title: "MOODI | Persiapan UTBK yang lebih mindful",
+    title: "MOODI | Persiapan UTBK yang adaptif",
     description:
-      "MOODI sedang menyiapkan ruang belajar UTBK yang memperhatikan ritme dan kesejahteraanmu.",
+      "MOODI menyesuaikan persiapan UTBK dengan ritme dan kondisi energimu hari ini.",
   },
   brand: "MOODI",
   navigation: {
@@ -20,11 +20,11 @@ export const siteCopy = {
   },
   landing: {
     eyebrow: "Persiapan UTBK Berbasis Ritme",
-    headlineFirst: "Belajar UTBK,",
-    headlineSecond: "tanpa lupa bernafas.",
+    headlineFirst: "Persiapan UTBK tetap jalan,",
+    headlineSecond: "ritme dan pikiran tetap dijaga.",
     intro:
-      "MOODI menyesuaikan porsi belajar dengan energimu hari ini. Kurangi beban cemas, bangun pemahaman bertahap, dan kenali pola kesalahanmu.",
-    status: "Ruang belajar adaptif yang siap menemani persiapanmu.",
+      "MOODI menyesuaikan porsi belajar dengan energimu hari ini. Kurangi salah karena panik atau terburu-buru, bangun pemahaman bertahap, dan evaluasi hasil secara jernih.",
+    status: "Ruang belajar adaptif untuk persiapan UTBK.",
     primaryAction: "Mulai belajar",
     secondaryAction: "Pelajari alur",
     illustrationLabel: "Ilustrasi meja belajar pixel art MOODI",
@@ -37,64 +37,65 @@ export const siteCopy = {
       "Ruang tenang",
     ],
     aboutLabel: "Tentang MOODI",
-    aboutTitle: "Persiapan yang memberi ruang untuk jeda.",
+    aboutTitle: "Persiapan yang memberi ruang untuk bernapas.",
     aboutDescription:
-      "MOODI menggabungkan latihan soal UTBK dengan penyesuaian ritme harianmu. Dari check-in kondisi harian hingga analisis kesalahan yang objektif.",
-    stepsTitle: "Bagaimana cara kerjanya?",
+      "MOODI menggabungkan latihan soal UTBK dengan penyesuaian ritme harianmu. Dari check-in kondisi harian hingga analisis penyebab kesalahan yang objektif.",
+    stepsTitle: "Alur belajar setiap hari",
     stepsIntro:
-      "Tiga langkah sederhana setiap hari:",
+      "Tiga langkah terarah setiap hari:",
     steps: [
       {
         title: "1. Check-in 30 detik",
-        description: "Catat tidur, energi, mood, dan tingkat stresmu pagi ini.",
+        description: "Catat tidur, energi, mood, dan beban pikiran sebelum mulai belajar.",
       },
       {
         title: "2. Terima rencana adaptif",
-        description: "Dapatkan rekomendasi mode belajar (Gas Pol, Seimbang, atau Pemulihan).",
+        description: "Dapatkan mode belajar hari ini: Pemulihan, Seimbang, atau Tantangan.",
       },
       {
         title: "3. Latihan & kenali kesalahan",
-        description: "Kerjakan soal bertahap dan identifikasi penyebab salah tanpa rasa bersalah.",
+        description: "Kerjakan soal bertahap dan petakan penyebab salah lewat Error Autopsy.",
       },
     ],
     featuresLabel: "Fitur Utama",
-    featuresTitle: "Dibangun untuk proses yang lebih ramah.",
+    featuresTitle: "Dibangun untuk proses yang lebih ramah dan terukur.",
     features: [
       {
         title: "Check-in Harian",
         description:
-          "Kenali kapasitasmu hari ini agar target belajarmu realistis dan tidak memicu burnout.",
+          "Kenali kapasitasmu hari ini agar target belajar realistis dan tidak memicu kelelahan berlebih.",
         icon: "sun",
       },
       {
         title: "Error Autopsy",
         description:
-          "Bedah tiap jawaban salah: apakah karena konsep belum paham, waktu mepet, atau kurang teliti.",
+          "Petakan tiap jawaban salah: apakah karena konsep belum paham, waktu mepet, panik, atau kurang teliti.",
         icon: "grid",
       },
       {
         title: "Ruang Tenang",
         description:
-          "Latihan pernapasan kotak, teknik grounding 5-4-3-2-1, dan reframing pikiran saat cemas datang.",
+          "Latihan pernapasan kotak 4-4-4-4, teknik grounding 5-4-3-2-1, dan reframing pikiran saat tegang.",
         icon: "breath",
       },
     ],
-    closingTitle: "Mulai dari satu langkah kecil hari ini.",
+    closingTitle: "Mulai langkah belajarmu hari ini.",
     closingDescription:
-      "Buat akun dan rasakan persiapan UTBK yang menghargai kapasitas mentalmu.",
-    footerTagline: "Belajar dengan jeda, bertumbuh dengan ritme sendiri.",
-    sdg: "MOODI mendukung kesehatan mental yang baik dan akses pendidikan berkualitas.",
+      "Buat akun dan rasakan persiapan UTBK yang menghargai ritme dan kapasitas fisikmu.",
+    footerTagline: "Belajar dengan ritme yang terjaga.",
+    sdg: "MOODI mendukung kesehatan mental yang baik (SDG 3.4) dan akses persiapan pendidikan yang setara (SDG 4.3).",
     disclaimer:
-      "MOODI adalah pendukung proses belajarmu, bukan pengganti layanan medis profesional atau psikolog klinis.",
+      "MOODI mendukung kesejahteraanmu, bukan pengganti psikolog atau konselor.",
+    iconCredit: "Ikon dari Pixel Icon Library oleh HackerNoon (CC BY 4.0)",
     privacy: "Privasi",
   },
   auth: {
     loginTitle: "Selamat datang kembali.",
     registerTitle: "Buat akun MOODI.",
     loginDescription:
-      "Masuk untuk membuka dashboard awal MOODI. Fitur belajar masih disiapkan.",
+      "Masuk ke akun MOODI untuk melanjutkan persiapan belajarmu.",
     registerDescription:
-      "Daftar untuk membuka dashboard awal MOODI. Fitur belajar masih disiapkan.",
+      "Daftar akun MOODI untuk memulai rencana belajar yang adaptif.",
     name: "Nama",
     email: "Email",
     password: "Kata sandi",
@@ -131,9 +132,9 @@ export const siteCopy = {
         label: "Dashboard siswa",
         greeting: "Hai,",
         roleLabel: "Siswa",
-        emptyTitle: "Belum ada aktivitas di sini.",
+        emptyTitle: "Belum ada rencana harian untuk hari ini.",
         emptyDescription:
-          "Dashboard MOODI masih kosong karena fitur belajar belum tersedia. Kami akan menampilkan aktivitasmu di sini saat fitur sudah siap.",
+          "Mulai dengan check-in 30 detik untuk menentukan mode belajar dan tugas yang sesuai kapasitasmu hari ini.",
         navigation: [
           {
             label: "Beranda",
@@ -172,9 +173,9 @@ export const siteCopy = {
         label: "Dashboard admin",
         greeting: "Selamat datang,",
         roleLabel: "Admin",
-        emptyTitle: "Panel admin sedang disiapkan.",
+        emptyTitle: "Panel administrasi MOODI.",
         emptyDescription:
-          "Beberapa fitur admin belum tersedia. Halaman ini hanya dapat diakses oleh akun admin.",
+          "Kelola bank soal, subtes, topik, materi pembelajaran, dan tautan rujukan layanan bantuan.",
         navigation: [
           {
             label: "Ringkasan",
@@ -411,22 +412,22 @@ export const siteCopy = {
       "Jawabanmu belum tersimpan. Cek koneksimu, lalu pilih lagi.",
     activeSessionFound: "Kamu masih memiliki sesi yang aktif.",
     // Panic Button & Breathing
-    panicButton: "Nafas dulu",
+    panicButton: "Napas dulu",
     panicLooseNotice:
-      "Timer dijeda sejenak. Ambil Nafas panjang, lalu lanjut saat siap.",
-    panicFullNotice: "Waktu tetap berjalan. Ambil Nafas panjang, lalu lanjut.",
+      "Timer dijeda sejenak. Ambil napas panjang, lalu lanjut saat siap.",
+    panicFullNotice: "Waktu tetap berjalan. Ambil napas panjang, lalu lanjut saat siap.",
     panicClose: "Kembali ke soal",
-    breathingInhale: "Tarik Nafas",
-    breathingHoldIn: "Tahan Nafas",
-    breathingExhale: "Hembuskan",
-    breathingHoldOut: "Tahan",
+    breathingInhale: "Tarik napas",
+    breathingHoldIn: "Tahan napas",
+    breathingExhale: "Hembuskan napas",
+    breathingHoldOut: "Tahan sejenak",
     breathingStepCounter: "Langkah {current} dari {total}",
     reducedMotionBreathingText:
-      "Ikuti hitungan Nafas kotak (4-4-4-4) perlahan.",
+      "Ikuti hitungan napas kotak (4-4-4-4) perlahan.",
     // Immediate review in Santai
     showExplanation: "Lihat pembahasan",
-    immediateCorrect: "Jawabanmu tepat!",
-    immediateWrong: "Perlu dicek lagi.",
+    immediateCorrect: "Jawaban tepat",
+    immediateWrong: "Perlu dicek lagi",
     // Review and Autopsy
     reviewTitle: "Hasil & Pembahasan",
     reviewSubtitle:
@@ -521,10 +522,10 @@ export const siteCopy = {
     checkQuestionCount: "Pertanyaan {current} dari {total}",
     checkSubmit: "Periksa jawaban",
     checkNext: "Pertanyaan berikutnya",
-    checkFinished: "Cek pemahaman selesai!",
+    checkFinished: "Cek pemahaman selesai",
     checkResult: "Kamu menjawab {correct} dari {total} pertanyaan dengan tepat.",
     wrongFeedback: "Perlu dicek lagi",
-    correctFeedback: "Tepat sekali!",
+    correctFeedback: "Jawaban tepat",
     aiAssistedNotice:
       "Disusun dengan bantuan AI dan sudah ditinjau tim MOODI.",
     noLessonsYet: "Belum ada materi terbit di subtes ini.",

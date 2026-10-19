@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import katex from "katex";
 import type { LexicalNodeJson, SerializedEditorStateJson } from "@/lib/editor/validate-lexical";
 import { ALLOWED_LEXICAL_NODES } from "@/lib/editor/validate-lexical";
+import { PixelIcon } from "@/components/pixel";
 
 interface RichTextViewProps {
   content: unknown;
@@ -171,11 +172,11 @@ function renderLexicalNode(node: LexicalNodeJson, key: string, isLesson: boolean
         return (
           <li key={key} className="flex items-start gap-2">
             <span
-              className={`mt-1 inline-flex size-4 shrink-0 items-center justify-center border-2 border-border text-[10px] font-bold ${
-                checked ? "bg-primary text-primary-foreground" : "bg-card"
+              className={`mt-0.5 inline-flex size-4 shrink-0 items-center justify-center border-2 border-border ${
+                checked ? "bg-moodi-sky text-ink" : "bg-card"
               }`}
             >
-              {checked ? "✓" : ""}
+              {checked ? <PixelIcon name="check" size={12} /> : null}
             </span>
             <span>{children}</span>
           </li>

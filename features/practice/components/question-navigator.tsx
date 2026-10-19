@@ -1,7 +1,7 @@
 "use client";
 
 import { siteCopy } from "@/lib/copy/id";
-import { CheckIcon, CloseIcon, SproutIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 
 interface QuestionNavigatorProps {
   totalQuestions: number;
@@ -22,7 +22,7 @@ export function QuestionNavigator({
   isOpenMobile = false,
   onCloseMobile,
   onPanicClick,
-  isFullSimulation = false,
+  isFullSimulation: _isFullSimulation = false,
 }: QuestionNavigatorProps) {
   const content = (
     <div className="space-y-4">
@@ -37,7 +37,7 @@ export function QuestionNavigator({
             onClick={onCloseMobile}
             type="button"
           >
-            <CloseIcon className="size-3.5" />
+            <PixelIcon name="close" size={14} />
           </button>
         )}
       </div>
@@ -68,7 +68,7 @@ export function QuestionNavigator({
               <span className="flex items-center gap-0.5">
                 {index + 1}
                 {isAnswered && !isCurrent && (
-                  <CheckIcon className="size-2.5" />
+                  <PixelIcon name="check" size={10} />
                 )}
               </span>
             </button>
@@ -102,7 +102,7 @@ export function QuestionNavigator({
             }}
             type="button"
           >
-            <SproutIcon className="size-4" />
+            <PixelIcon name="breathe" size={16} />
             <span>{siteCopy.practice.panicButton}</span>
           </button>
         </div>

@@ -6,7 +6,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { $createQuoteNode } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
 
-import { TextQuote } from "lucide-react";
+import { PixelIcon } from "@/components/pixel";
 
 import {
   type ComponentPickerItem,
@@ -23,7 +23,7 @@ export function QuotePickerPlugin() {
       {
         value: "quote",
         label: t.quote,
-        icon: <TextQuote className="text-muted-foreground" />,
+        icon: <PixelIcon name="quote" size={16} className="text-muted-foreground" />,
         keywords: ["quote", "block quote", "blockquote"],
         onSelect: () =>
           editor.update(() => {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { siteCopy } from "@/lib/copy/id";
 import { RichContent } from "@/components/rich-content";
 import { ErrorTagPicker } from "@/features/practice/components/error-tag-picker";
-import { CheckIcon, WarningIcon } from "@/components/icons";
+import { PixelIcon } from "@/components/pixel";
 import type { SessionReviewData } from "@/features/practice/queries";
 
 export function ReviewList({ session }: { session: SessionReviewData }) {
@@ -134,19 +134,19 @@ export function ReviewList({ session }: { session: SessionReviewData }) {
                 </span>
 
                 {ans.isCorrect ?
-                  <span className="inline-flex items-center gap-1.5 border border-border bg-moodi-sky/30 px-3 py-1 text-xs font-bold text-ink">
-                    <CheckIcon className="size-3.5" />
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+                    <PixelIcon name="check" size={14} className="text-primary" />
                     <span>{siteCopy.practice.labelCorrect}</span>
-                  </span>
+                  </div>
                 : ans.selectedOptionId ?
-                  <span className="inline-flex items-center gap-1.5 border border-border bg-moodi-butter/50 px-3 py-1 text-xs font-bold text-ink">
-                    <WarningIcon className="size-3.5" />
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+                    <PixelIcon name="warning" size={14} />
                     <span>{siteCopy.practice.labelCheckAgain}</span>
-                  </span>
-                : <span className="inline-flex items-center gap-1.5 border border-border bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-                    <span>-</span>
+                  </div>
+                : <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <PixelIcon name="minus" size={12} />
                     <span>{siteCopy.practice.labelUnanswered}</span>
-                  </span>
+                  </div>
                 }
               </div>
 

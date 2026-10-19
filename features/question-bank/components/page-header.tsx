@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { PixelIcon } from "@/components/pixel";
 
 /** Static page header. It reads no data, so it ships in the instant shell. */
 export function PageHeader({
@@ -18,10 +19,11 @@ export function PageHeader({
   return (
     <>
       <Link
-        className="text-sm font-semibold text-link underline underline-offset-4"
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-link underline underline-offset-4"
         href={backHref}
       >
-        ← {backLabel}
+        <PixelIcon name="arrow-left" size={16} />
+        <span>{backLabel}</span>
       </Link>
       <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
         <div>
