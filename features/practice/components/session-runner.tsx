@@ -13,6 +13,7 @@ import {
   pauseSessionTimerAction,
   type ImmediateFeedback,
 } from "@/features/practice/actions";
+import { saveCalmSessionAction } from "@/features/calm/actions";
 import { RichContent } from "@/components/rich-content";
 import { PixelIcon } from "@/components/pixel";
 import type { TryoutMode } from "@/app/generated/prisma/enums";
@@ -155,6 +156,14 @@ export function SessionRunner({
 
   async function handlePanicClose(pausedSeconds: number) {
     setIsPanicOpen(false);
+
+    // Record calm session linked to this tryout with panic_button trigger
+    await saveCalmSessionAction({
+      tool: "breathing",
+      durationSeconds: Math.max(30, pausedSeconds || 60),
+      triggerSource: "panic_button",
+      tryoutSessionId: sessionId,
+    });
 
     if (mode === "timed" && pausedSeconds > 0) {
       const res = await pauseSessionTimerAction(sessionId, pausedSeconds);

@@ -5,13 +5,21 @@ import { prisma } from "@/lib/prisma";
 import { RULES } from "@/config/rules";
 
 export const getInsightDashboardData = cache(async (userId: string) => {
+  const profile = await prisma.studentProfile.findUnique({
+    where: { userId },
+    select: { wellbeingConsent: true },
+  });
+  const wellbeingConsent = profile?.wellbeingConsent ?? false;
+
   const [checkinsRaw, errorTagsRaw, topicStatsRaw, tryoutSessionsRaw] =
     await Promise.all([
-      prisma.checkin.findMany({
-        where: { userId },
-        orderBy: { checkinDate: "desc" },
-        take: 14,
-      }),
+      wellbeingConsent
+        ? prisma.checkin.findMany({
+            where: { userId },
+            orderBy: { checkinDate: "desc" },
+            take: 14,
+          })
+        : Promise.resolve([]),
       prisma.sessionAnswer.groupBy({
         by: ["errorTag"],
         where: {
@@ -43,7 +51,7 @@ export const getInsightDashboardData = cache(async (userId: string) => {
           score: { not: null },
         },
         orderBy: { finishedAt: "desc" },
-        take: 10,
+        take: 20,
         select: {
           id: true,
           startedAt: true,
@@ -87,16 +95,66 @@ export const getInsightDashboardData = cache(async (userId: string) => {
     score: s.score !== null ? Number(s.score) : 0,
   }));
 
+  // Correlate factual self-reported sleep with tryout accuracy
+  const checkinByDate = new Map<string, number>();
+  for (const c of checkinsRaw) {
+    const key = new Date(c.checkinDate).toISOString().slice(0, 10);
+    checkinByDate.set(key, Number(c.sleepHours));
+  }
+
+  let wellRestedSum = 0;
+  let wellRestedCount = 0;
+  let underRestedSum = 0;
+  let underRestedCount = 0;
+
+  for (const s of tryoutSessionsRaw) {
+    if (!s.finishedAt || s.score === null) continue;
+    const dateKey = new Date(s.finishedAt).toISOString().slice(0, 10);
+    const sleep = checkinByDate.get(dateKey);
+    if (sleep !== undefined) {
+      const score = Number(s.score);
+      if (sleep >= 7) {
+        wellRestedSum += score;
+        wellRestedCount += 1;
+      } else if (sleep < 6) {
+        underRestedSum += score;
+        underRestedCount += 1;
+      }
+    }
+  }
+
+  const sleepComparison = wellbeingConsent
+    ? {
+        hasData: wellRestedCount > 0 || underRestedCount > 0,
+        wellRested: {
+          count: wellRestedCount,
+          avgAccuracy:
+            wellRestedCount > 0
+              ? Math.round(wellRestedSum / wellRestedCount)
+              : null,
+        },
+        underRested: {
+          count: underRestedCount,
+          avgAccuracy:
+            underRestedCount > 0
+              ? Math.round(underRestedSum / underRestedCount)
+              : null,
+        },
+      }
+    : null;
+
   const hasEnoughCheckins = checkins.length >= RULES.insights.minCheckins;
 
   return {
     hasEnoughCheckins,
     totalCheckins: checkins.length,
     minRequired: RULES.insights.minCheckins,
+    wellbeingConsent,
     checkins,
     errorSpread,
     topicMastery,
     tryoutScores,
+    sleepComparison,
   };
 });
 

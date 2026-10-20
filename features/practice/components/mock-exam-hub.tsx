@@ -7,6 +7,7 @@ import { LevelPicker } from "@/features/practice/components/level-picker";
 import { StudyCatalog } from "@/features/practice/components/study-catalog";
 import { startSessionAction } from "@/features/practice/actions";
 import { siteCopy } from "@/lib/copy/id";
+import { PixelIcon } from "@/components/pixel";
 import type { TryoutMode } from "@/app/generated/prisma/enums";
 import type { MockExamData, StudyCatalogData } from "@/features/practice/queries";
 
@@ -22,6 +23,7 @@ export function MockExamHub({
   activeSession,
   catalog,
   mode,
+  gradedExposure,
   initialTab = "subtest",
   initialTopicId,
 }: {
@@ -30,6 +32,7 @@ export function MockExamHub({
   activeSession: MockExamData["activeSession"];
   catalog?: StudyCatalogData["catalog"];
   mode?: "recovery" | "balanced" | "challenge" | null;
+  gradedExposure?: MockExamData["gradedExposure"];
   initialTab?: "subtest" | "topic";
   initialTopicId?: string | null;
 }) {
@@ -39,7 +42,9 @@ export function MockExamHub({
   const [selectedSubtestId, setSelectedSubtestId] = useState<string>(
     subtests[0]?.id ?? "",
   );
-  const [level, setLevel] = useState<TryoutMode>("timed");
+  const [level, setLevel] = useState<TryoutMode>(
+    mode === "recovery" || gradedExposure?.isTriggered ? "relaxed" : "timed",
+  );
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -62,6 +67,36 @@ export function MockExamHub({
     <div className="space-y-10">
       {/* Active Session Alert/Card */}
       {activeSession && <ActiveSessionCard session={activeSession} />}
+
+      {/* Graded Exposure Recommendation Banner */}
+      {gradedExposure?.isTriggered && (
+        <aside
+          aria-label="Rekomendasi Tingkat Paparan Tryout"
+          className="pixel-shadow flex flex-col gap-3 border-2 border-border bg-moodi-butter/40 p-5 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div className="space-y-1 max-w-2xl">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-foreground">
+              <PixelIcon name="bulb" size={16} />
+              <span>Rekomendasi Ritme Tryout (Graded Exposure)</span>
+            </div>
+            <h3 className="font-semibold text-foreground text-sm sm:text-base">
+              {gradedExposure.reason}
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Tingkat paparan Santai telah dipilihkan untuk membantumu fokus memahami konsep tanpa kepanikan waktu.
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <Link
+              className="pixel-press inline-flex items-center gap-1.5 border-2 border-border bg-card px-3 py-1.5 text-xs font-bold text-foreground shadow-[2px_2px_0_var(--border)] hover:bg-muted"
+              href="/dashboard/calm"
+            >
+              <PixelIcon name="breathe" size={14} />
+              <span>Latihan napas dulu</span>
+            </Link>
+          </div>
+        </aside>
+      )}
 
       {/* Mode / Tab Selector */}
       {catalog && catalog.length > 0 && (

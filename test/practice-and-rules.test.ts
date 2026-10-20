@@ -4,6 +4,7 @@ import { seededShuffle } from "@/lib/practice/shuffle";
 import { isQuestionReady } from "@/lib/practice/question-ready";
 import { evaluateSessionAnswers } from "@/lib/practice/scoring";
 import { guessErrorTag } from "@/lib/rules/guess-error-tag";
+import { evaluateGradedExposure } from "@/lib/rules/graded-exposure";
 import { PRACTICE } from "@/config/practice";
 
 describe("level-policy: getTimerPlan", () => {
@@ -287,4 +288,59 @@ describe("guess-error-tag: guessErrorTag", () => {
     );
     expect(result).toBe("didnt_know");
   });
+
+  it("scales last window proportionally for short sessions (e.g. 7 minutes) so early errors are not falsely marked out_of_time", () => {
+    // Session total: 420s (7 mins). Threshold lastWindowSeconds is 900s.
+    // Scaled window: 420 * 0.3 = 126s.
+    // Student answered at elapsed 100s (320s left > 126s) with normal pace -> should NOT be out_of_time
+    const result = guessErrorTag(
+      {
+        isCorrect: false,
+        isAnswered: true,
+        elapsedSeconds: 100,
+        secondsSpent: 60,
+        timeLimitSeconds: 420,
+        averagePaceSeconds: 60,
+      },
+      customRules,
+    );
+    expect(result).toBe("didnt_know");
+  });
 });
+
+describe("graded-exposure: evaluateGradedExposure", () => {
+  it("returns not triggered when there are no recent sessions or mistakes", () => {
+    const res = evaluateGradedExposure([]);
+    expect(res.isTriggered).toBe(false);
+    expect(res.recommendedLevel).toBeNull();
+  });
+
+  it("triggers recommendation to relaxed mode when panic/timeout mistakes exceed 40%", () => {
+    // 3 recent sessions with total 10 wrong answers, 6 of which are panic or out_of_time (60% > 40%)
+    const sessions = [
+      { sessionId: "s1", totalWrongAnswers: 4, panicOrTimeoutCount: 3 },
+      { sessionId: "s2", totalWrongAnswers: 3, panicOrTimeoutCount: 2 },
+      { sessionId: "s3", totalWrongAnswers: 3, panicOrTimeoutCount: 1 },
+    ];
+
+    const res = evaluateGradedExposure(sessions);
+    expect(res.isTriggered).toBe(true);
+    expect(res.ruleKey).toBe("graded_exposure");
+    expect(res.recommendedLevel).toBe("relaxed");
+    expect(res.reason).toContain("60%");
+    expect(res.reason).toContain("mode Santai");
+  });
+
+  it("does not trigger when panic/timeout mistakes are 40% or below", () => {
+    // 10 wrong answers, only 3 panic/timeout (30% <= 40%)
+    const sessions = [
+      { sessionId: "s1", totalWrongAnswers: 5, panicOrTimeoutCount: 1 },
+      { sessionId: "s2", totalWrongAnswers: 5, panicOrTimeoutCount: 2 },
+    ];
+
+    const res = evaluateGradedExposure(sessions);
+    expect(res.isTriggered).toBe(false);
+    expect(res.recommendedLevel).toBeNull();
+  });
+});
+

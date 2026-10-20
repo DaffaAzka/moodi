@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { evaluateDailyMode } from "@/lib/rules/daily-mode";
+import { evaluateDailyMode, checkReferralTriggered } from "@/lib/rules/daily-mode";
 import { generateDailyPlanTasks } from "@/lib/rules/plan-generator";
+import { evaluateRestSuggestion } from "@/lib/rules/rest-suggestion";
 
 describe("Rule Engine: evaluateDailyMode", () => {
   it("determines recovery mode when sleep is under 5 hours", () => {
@@ -158,3 +159,105 @@ describe("Plan Generator: generateDailyPlanTasks", () => {
     expect(tasks[0]?.title).toContain("Konsep Logika Proposisi");
   });
 });
+
+describe("Rule Engine: checkReferralTriggered", () => {
+  it("triggers when mood <= 2 for 3 consecutive days even if stress is low", () => {
+    const history = [
+      { mood: 2, stress: 1, checkinDate: new Date("2026-10-14") },
+      { mood: 1, stress: 2, checkinDate: new Date("2026-10-13") },
+    ];
+    const triggered = checkReferralTriggered(
+      { mood: 2, stress: 1 },
+      history,
+      new Date("2026-10-15"),
+    );
+    expect(triggered).toBe(true);
+  });
+
+  it("triggers when stress >= 4 for 3 consecutive days even if mood is high", () => {
+    const history = [
+      { mood: 4, stress: 4, checkinDate: new Date("2026-10-14") },
+      { mood: 5, stress: 5, checkinDate: new Date("2026-10-13") },
+    ];
+    const triggered = checkReferralTriggered(
+      { mood: 4, stress: 4 },
+      history,
+      new Date("2026-10-15"),
+    );
+    expect(triggered).toBe(true);
+  });
+
+  it("triggers on mixed strain criteria across consecutive days", () => {
+    const history = [
+      { mood: 5, stress: 4, checkinDate: new Date("2026-10-14") }, // high stress
+      { mood: 2, stress: 2, checkinDate: new Date("2026-10-13") }, // low mood
+    ];
+    const triggered = checkReferralTriggered(
+      { mood: 1, stress: 2 }, // low mood
+      history,
+      new Date("2026-10-15"),
+    );
+    expect(triggered).toBe(true);
+  });
+
+  it("does not trigger if days are non-consecutive (gap > 1 day)", () => {
+    const history = [
+      { mood: 1, stress: 5, checkinDate: new Date("2026-10-12") }, // 3-day gap from Oct 15
+      { mood: 1, stress: 5, checkinDate: new Date("2026-10-11") },
+    ];
+    const triggered = checkReferralTriggered(
+      { mood: 1, stress: 5 },
+      history,
+      new Date("2026-10-15"),
+    );
+    expect(triggered).toBe(false);
+  });
+});
+
+describe("Rule Engine: evaluateRestSuggestion", () => {
+  it("triggers when accuracy falls and study time rises across two consecutive days", () => {
+    const summaries = [
+      { date: new Date("2026-10-15"), secondsSpent: 3600, accuracy: 55 },
+      { date: new Date("2026-10-14"), secondsSpent: 2400, accuracy: 75 },
+    ];
+    const res = evaluateRestSuggestion(summaries);
+    expect(res.isTriggered).toBe(true);
+    expect(res.ruleKey).toBe("rest_suggestion");
+    expect(res.reason).toContain("Dua hari ini kamu berlatih lebih keras");
+  });
+
+  it("does not trigger if study time decreased despite accuracy drop", () => {
+    const summaries = [
+      { date: new Date("2026-10-15"), secondsSpent: 1200, accuracy: 50 },
+      { date: new Date("2026-10-14"), secondsSpent: 2400, accuracy: 75 },
+    ];
+    const res = evaluateRestSuggestion(summaries);
+    expect(res.isTriggered).toBe(false);
+  });
+
+  it("does not trigger if accuracy rose while study time increased", () => {
+    const summaries = [
+      { date: new Date("2026-10-15"), secondsSpent: 3600, accuracy: 85 },
+      { date: new Date("2026-10-14"), secondsSpent: 2400, accuracy: 70 },
+    ];
+    const res = evaluateRestSuggestion(summaries);
+    expect(res.isTriggered).toBe(false);
+  });
+
+  it("does not trigger if sessions are on non-consecutive days", () => {
+    const summaries = [
+      { date: new Date("2026-10-15"), secondsSpent: 3600, accuracy: 55 },
+      { date: new Date("2026-10-10"), secondsSpent: 2400, accuracy: 75 }, // 5-day gap
+    ];
+    const res = evaluateRestSuggestion(summaries);
+    expect(res.isTriggered).toBe(false);
+  });
+
+  it("does not trigger with fewer than 2 days of data", () => {
+    const res = evaluateRestSuggestion([
+      { date: new Date("2026-10-15"), secondsSpent: 3600, accuracy: 55 },
+    ]);
+    expect(res.isTriggered).toBe(false);
+  });
+});
+

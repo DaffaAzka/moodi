@@ -51,13 +51,9 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
     },
   }[mode];
 
-  // Referral trigger check: 3 consecutive days mood <= 2 and stress >= 4
-  const isReferralTriggered =
-    todayCheckin &&
-    todayCheckin.mood <= 2 &&
-    todayCheckin.stress >= 4 &&
-    data.recentCheckins.length >= 3 &&
-    data.recentCheckins.slice(0, 3).every((c) => c.mood <= 2 && c.stress >= 4);
+  // Referral & Rest Suggestion checks from rule engine
+  const isReferralTriggered = data.isReferralTriggered;
+  const restSuggestion = data.restSuggestion;
 
   function handleToggle(taskId: string, currentStatus: string) {
     setTogglingTaskId(taskId);
@@ -110,6 +106,34 @@ export function DailyPlanView({ data, onEditCheckin }: DailyPlanViewProps) {
             href="/dashboard/support"
           >
             <span>Kontak bantuan</span>
+            <PixelIcon name="arrow-right" size={14} />
+          </Link>
+        </aside>
+      )}
+
+      {/* Rest Suggestion Banner (Rule key: rest_suggestion) */}
+      {restSuggestion?.isTriggered && (
+        <aside
+          aria-label="Saran Istirahat"
+          className="pixel-shadow flex flex-col gap-3 border-2 border-border bg-moodi-butter/40 p-4 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase text-muted-foreground">
+              <PixelIcon name="sleep" size={16} />
+              <span>Saran Istirahat</span>
+            </div>
+            <h3 className="font-semibold text-foreground">
+              {restSuggestion.reason}
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Belajar efektif tidak selalu tentang durasi yang terus ditambah. Luangkan waktu sejenak di Ruang Tenang atau istirahat cukup.
+            </p>
+          </div>
+          <Link
+            className="pixel-press inline-flex shrink-0 items-center justify-center gap-1.5 border-2 border-border bg-card px-3 py-1.5 text-xs font-bold text-foreground shadow-[2px_2px_0_var(--border)] hover:bg-muted"
+            href="/dashboard/calm"
+          >
+            <span>Ke Ruang Tenang</span>
             <PixelIcon name="arrow-right" size={14} />
           </Link>
         </aside>
