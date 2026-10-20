@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { prisma } from "@/lib/prisma";
+import { evaluateGradedExposure } from "@/lib/rules/graded-exposure";
 
 export const getActiveSession = cache(async (userId: string) => {
   return prisma.tryoutSession.findFirst({
@@ -171,10 +172,37 @@ export const getMockExamData = cache(async (userId: string) => {
     score: s.score !== null ? Number(s.score) : null,
   }));
 
+  const last3SessionsWithTags = await prisma.tryoutSession.findMany({
+    where: {
+      userId,
+      finishedAt: { not: null },
+    },
+    orderBy: { finishedAt: "desc" },
+    take: 3,
+    select: {
+      id: true,
+      answers: {
+        where: { isCorrect: false },
+        select: { errorTag: true },
+      },
+    },
+  });
+
+  const sessionSummaries = last3SessionsWithTags.map((s) => ({
+    sessionId: s.id,
+    totalWrongAnswers: s.answers.length,
+    panicOrTimeoutCount: s.answers.filter(
+      (a) => a.errorTag === "panic" || a.errorTag === "out_of_time",
+    ).length,
+  }));
+
+  const gradedExposure = evaluateGradedExposure(sessionSummaries);
+
   return {
     subtests: subtestsWithCounts,
     recentSessions: formattedRecentSessions,
     activeSession,
+    gradedExposure,
   };
 });
 

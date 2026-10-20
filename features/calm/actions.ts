@@ -11,11 +11,13 @@ export async function saveCalmSessionAction({
   triggerSource = "manual",
   durationSeconds = 60,
   note = null,
+  tryoutSessionId = null,
 }: {
   tool: CalmTool;
   triggerSource?: CalmTrigger;
   durationSeconds?: number;
   note?: string | null;
+  tryoutSessionId?: string | null;
 }) {
   const session = await getAuthSession();
   if (!session) return { error: "Unauthorized" };
@@ -35,6 +37,7 @@ export async function saveCalmSessionAction({
           triggerSource,
           durationSeconds,
           note: note?.trim() || null,
+          tryoutSessionId: tryoutSessionId || null,
         },
       });
     }
@@ -45,6 +48,32 @@ export async function saveCalmSessionAction({
   } catch (err) {
     console.error("Failed to save calm session:", err);
     return { error: "Gagal menyimpan sesi tenang." };
+  }
+}
+
+export async function deleteCalmSessionAction(id: string) {
+  const session = await getAuthSession();
+  if (!session) return { error: "Unauthorized" };
+
+  try {
+    const existing = await prisma.calmSession.findUnique({
+      where: { id },
+      select: { userId: true },
+    });
+
+    if (!existing || existing.userId !== session.user.id) {
+      return { error: "Catatan tidak ditemukan atau kamu tidak memiliki akses." };
+    }
+
+    await prisma.calmSession.delete({
+      where: { id },
+    });
+
+    revalidatePath("/dashboard/calm");
+    return { success: true };
+  } catch (err) {
+    console.error("Failed to delete calm session:", err);
+    return { error: "Gagal menghapus catatan refleksi." };
   }
 }
 

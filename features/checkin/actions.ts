@@ -68,7 +68,7 @@ export async function submitCheckinAction(rawData: CheckinFormData) {
     });
 
     // 3. Evaluate Mode via Rule Engine
-    const evaluation = evaluateDailyMode(data, recentCheckinsRaw, consent);
+    const evaluation = evaluateDailyMode(data, recentCheckinsRaw, consent, today);
 
     // 4. Save Checkin record only if consent is given (AGENTS.md section 8)
     if (consent) {

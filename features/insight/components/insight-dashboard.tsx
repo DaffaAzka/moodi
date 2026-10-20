@@ -12,6 +12,7 @@ export function InsightDashboard({ data }: { data: InsightDashboardData }) {
     checkins,
     errorSpread,
     topicMastery,
+    sleepComparison,
   } = data;
 
   if (!hasEnoughCheckins) {
@@ -63,8 +64,46 @@ export function InsightDashboard({ data }: { data: InsightDashboardData }) {
     careless: { label: "Kurang Teliti", desc: "Salah baca atau keliru hitung", color: "bg-moodi-pink", barColor: "bg-moodi-pink" },
   };
 
+  const actionRecommendations: Record<
+    string,
+    { title: string; description: string; ctaLabel: string; ctaHref: string }
+  > = {
+    didnt_know: {
+      title: "Fokus Penguasaan Konsep Materi",
+      description:
+        "Banyak kesalahan berasal dari materi yang belum dipahami. Buka materi konsep di topik terlemah untuk memperdalam pemahaman sebelum lanjut tryout berikutnya.",
+      ctaLabel: "Buka Tab Belajar",
+      ctaHref: "/dashboard/study",
+    },
+    out_of_time: {
+      title: "Atur Ritme dan Manajemen Waktu",
+      description:
+        "Kesalahan terbanyak disebabkan kehabisan waktu. Coba simulasi Santai tanpa batasan waktu ketat terlebih dahulu agar ritme membacamu lebih tenang dan teratur.",
+      ctaLabel: "Coba Mode Santai",
+      ctaHref: "/dashboard/mock-exam",
+    },
+    panic: {
+      title: "Kendalikan Tekanan dan Kecemasan",
+      description:
+        "Tekanan mental saat ujian menjadi penyebab utama kesalahan. Manfaatkan latihan pernapasan di Ruang Tenang sebelum mengerjakan sesi berikutnya.",
+      ctaLabel: "Latihan Pernapasan",
+      ctaHref: "/dashboard/calm",
+    },
+    careless: {
+      title: "Tingkatkan Ketelitian Membaca",
+      description:
+        "Kesalahan didominasi kurang teliti atau salah baca opsi. Luangkan waktu ekstra untuk memverifikasi kata kunci pertanyaan sebelum memilih jawaban.",
+      ctaLabel: "Latihan Soal Mandiri",
+      ctaHref: "/dashboard/mock-exam",
+    },
+  };
+
   const sortedErrors = [...errorSpread].sort((a, b) => b.count - a.count);
   const dominantError = sortedErrors[0];
+  const actionRecommendation =
+    dominantError && totalErrors > 0
+      ? actionRecommendations[dominantError.tag] ?? null
+      : null;
 
   return (
     <div className="space-y-8">
@@ -142,6 +181,49 @@ export function InsightDashboard({ data }: { data: InsightDashboardData }) {
             );
           })}
         </div>
+
+        {/* Factual Sleep vs Tryout Score Comparison */}
+        {sleepComparison && sleepComparison.hasData && (
+          <div className="border-t border-border/40 pt-4 space-y-2">
+            <div className="flex items-center gap-2">
+              <PixelIcon name="sleep" size={16} className="text-muted-foreground" />
+              <h3 className="text-xs font-mono font-bold uppercase text-muted-foreground">
+                Perbandingan Faktual Mandiri
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div className="border border-border p-3 bg-muted/20">
+                <span className="text-xs text-muted-foreground">
+                  Hari tidur cukup (&ge; 7 jam):
+                </span>
+                <p className="font-pixelify text-xl font-bold text-foreground">
+                  {sleepComparison.wellRested.avgAccuracy !== null
+                    ? `${sleepComparison.wellRested.avgAccuracy}% akurasi`
+                    : "Belum ada sesi tryout"}
+                </p>
+                <span className="text-[11px] font-mono text-muted-foreground">
+                  {sleepComparison.wellRested.count} sesi pengerjaan
+                </span>
+              </div>
+              <div className="border border-border p-3 bg-muted/20">
+                <span className="text-xs text-muted-foreground">
+                  Hari tidur kurang (&lt; 6 jam):
+                </span>
+                <p className="font-pixelify text-xl font-bold text-foreground">
+                  {sleepComparison.underRested.avgAccuracy !== null
+                    ? `${sleepComparison.underRested.avgAccuracy}% akurasi`
+                    : "Belum ada sesi tryout"}
+                </p>
+                <span className="text-[11px] font-mono text-muted-foreground">
+                  {sleepComparison.underRested.count} sesi pengerjaan
+                </span>
+              </div>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              Catatan: Data ini merangkum perbandingan mandiri antara jam tidur yang kamu isi dan akurasi tryout pada hari bersangkutan. Bukan diagnosis klinis.
+            </p>
+          </div>
+        )}
       </section>
 
       {/* 2. Error Autopsy: Single Stacked Bar (Replaces 4 duplicate KPI cards) */}
@@ -232,6 +314,63 @@ export function InsightDashboard({ data }: { data: InsightDashboardData }) {
           <p className="text-center text-xs text-muted-foreground py-4">
             Belum ada data kesalahan tryout yang ditandai.
           </p>
+        )}
+      </section>
+
+      {/* 2b. Concrete Next Step Action Card (Proposal 2) */}
+      <section
+        aria-labelledby="action-recommendation-heading"
+        className="pixel-shadow space-y-4 border-2 border-border bg-card p-5 sm:p-7"
+      >
+        <div className="flex items-center gap-2 border-b border-border/40 pb-3">
+          <PixelIcon name="target" size={18} className="text-muted-foreground" />
+          <h2
+            className="font-pixelify text-xl font-bold text-foreground sm:text-2xl"
+            id="action-recommendation-heading"
+          >
+            Langkah Konkret Berikutnya
+          </h2>
+        </div>
+
+        {actionRecommendation ? (
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border border-border bg-background p-4">
+            <div className="space-y-1">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                Rekomendasi Berdasarkan Pola
+              </span>
+              <h3 className="text-base font-bold text-foreground">
+                {actionRecommendation.title}
+              </h3>
+              <p className="text-xs leading-relaxed text-muted-foreground max-w-xl">
+                {actionRecommendation.description}
+              </p>
+            </div>
+            <Link
+              className="pixel-press inline-flex shrink-0 items-center justify-center gap-1.5 border-2 border-border bg-moodi-sky px-4 py-2 text-xs font-bold text-ink shadow-[2px_2px_0_var(--border)] hover:bg-moodi-sky/90"
+              href={actionRecommendation.ctaHref}
+            >
+              <span>{actionRecommendation.ctaLabel}</span>
+              <PixelIcon name="arrow-right" size={14} />
+            </Link>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border border-border bg-background p-4">
+            <div className="space-y-1">
+              <h3 className="text-sm font-bold text-foreground">
+                Mulai Evaluasi Kesalahan
+              </h3>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                Selesaikan satu sesi tryout untuk memetakan penyebab kesalahan dan mendapatkan rekomendasi strategi berikutnya.
+              </p>
+            </div>
+            <Link
+              className="pixel-press inline-flex shrink-0 items-center justify-center gap-1.5 border-2 border-border bg-moodi-sky px-4 py-2 text-xs font-bold text-ink shadow-[2px_2px_0_var(--border)] hover:bg-moodi-sky/90"
+              href="/dashboard/mock-exam"
+            >
+              <span>Mulai Tryout</span>
+              <PixelIcon name="arrow-right" size={14} />
+            </Link>
+          </div>
         )}
       </section>
 

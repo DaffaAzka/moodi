@@ -21,10 +21,55 @@ export interface ModeEvaluationResult {
   isReferralTriggered: boolean;
 }
 
+export function isHighStrainCondition(mood: number, stress: number): boolean {
+  return (
+    mood <= RULES.referral.moodAtMost || stress >= RULES.referral.stressAtLeast
+  );
+}
+
+export function checkReferralTriggered(
+  todayInput: { mood: number; stress: number },
+  recentHistory: HistoricalCheckin[],
+  todayDate: Date = new Date(),
+): boolean {
+  if (!isHighStrainCondition(todayInput.mood, todayInput.stress)) {
+    return false;
+  }
+  if (recentHistory.length < 2) {
+    return false;
+  }
+
+  const prev1 = recentHistory[0];
+  const prev2 = recentHistory[1];
+  if (!prev1 || !prev2) return false;
+
+  const diffDays = (a: Date, b: Date) => {
+    const msA = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const msB = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    return Math.round((msA - msB) / (24 * 60 * 60 * 1000));
+  };
+
+  const diff1 = diffDays(todayDate, new Date(prev1.checkinDate));
+  const diff2 = diffDays(new Date(prev1.checkinDate), new Date(prev2.checkinDate));
+
+  // Must be strictly consecutive calendar days (1 day gap between each)
+  if (diff1 !== 1 || diff2 !== 1) {
+    return false;
+  }
+
+  return (
+    isHighStrainCondition(prev1.mood, prev1.stress) &&
+    isHighStrainCondition(prev2.mood, prev2.stress)
+  );
+}
+
 export function evaluateDailyMode(
   input: CheckinInput,
   recentHistory: HistoricalCheckin[] = [],
   wellbeingConsent = true,
+  todayDate: Date = recentHistory[0]
+    ? new Date(new Date(recentHistory[0].checkinDate).getTime() + 24 * 60 * 60 * 1000)
+    : new Date(),
 ): ModeEvaluationResult {
   // Without consent, daily mode stays fixed to balanced (AGENTS.md section 8)
   if (!wellbeingConsent) {
@@ -36,30 +81,8 @@ export function evaluateDailyMode(
     };
   }
 
-  // 1. Check Referral Rule: 3 consecutive days of low mood (<= 2) and high stress (>= 4)
-  let isReferralTriggered = false;
-  const isTodayHighStrain =
-    input.mood <= RULES.referral.moodAtMost &&
-    input.stress >= RULES.referral.stressAtLeast;
-
-  if (isTodayHighStrain && recentHistory.length >= 2) {
-    const prevDay1 = recentHistory[0];
-    const prevDay2 = recentHistory[1];
-
-    const prev1HighStrain =
-      prevDay1 &&
-      prevDay1.mood <= RULES.referral.moodAtMost &&
-      prevDay1.stress >= RULES.referral.stressAtLeast;
-
-    const prev2HighStrain =
-      prevDay2 &&
-      prevDay2.mood <= RULES.referral.moodAtMost &&
-      prevDay2.stress >= RULES.referral.stressAtLeast;
-
-    if (prev1HighStrain && prev2HighStrain) {
-      isReferralTriggered = true;
-    }
-  }
+  // 1. Check Referral Rule: 3 consecutive days of low mood (<= 2) or high stress (>= 4)
+  const isReferralTriggered = checkReferralTriggered(input, recentHistory, todayDate);
 
   // 2. Recovery Rule: sleep < 5 OR stress >= 4
   if (

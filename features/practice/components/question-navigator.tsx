@@ -92,7 +92,7 @@ export function QuestionNavigator({
       </div>
 
       {onPanicClick && (
-        <div className="border-t-2 border-border pt-4">
+        <div className="space-y-2 border-t-2 border-border pt-4">
           <button
             aria-label={siteCopy.practice.panicButton}
             className="pixel-press pixel-shadow flex w-full items-center justify-center gap-2 border-2 border-border bg-moodi-peach px-3 py-2.5 font-bold text-ink shadow-[2px_2px_0_var(--border)] hover:bg-moodi-peach/90"
@@ -105,6 +105,15 @@ export function QuestionNavigator({
             <PixelIcon name="breathe" size={16} />
             <span>{siteCopy.practice.panicButton}</span>
           </button>
+          <a
+            className="flex items-center justify-center gap-1.5 py-1 text-center text-[11px] font-semibold text-muted-foreground hover:text-foreground hover:underline"
+            href="/dashboard/support"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <PixelIcon name="support" size={12} />
+            <span>Butuh bantuan darurat? Hubungi konselor</span>
+          </a>
         </div>
       )}
     </div>

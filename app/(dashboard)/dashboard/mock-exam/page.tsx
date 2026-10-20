@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getAuthSession } from "@/lib/auth-session";
 import { getUserRole } from "@/lib/user-role";
 import { siteCopy } from "@/lib/copy/id";
+import { prisma } from "@/lib/prisma";
 import { getMockExamData, getStudyCatalogData } from "@/features/practice/queries";
 import { MockExamHub } from "@/features/practice/components/mock-exam-hub";
 
@@ -25,10 +26,22 @@ export default async function MockExamPage({ searchParams }: MockExamPageProps) 
   const initialTab = resolvedParams?.tab === "topic" || resolvedParams?.topicId ? "topic" : "subtest";
   const initialTopicId = resolvedParams?.topicId ?? null;
 
-  const [{ subtests, recentSessions, activeSession }, { catalog }] =
+  const now = new Date();
+  const today = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
+
+  const [{ subtests, recentSessions, activeSession, gradedExposure }, { catalog }, todayPlan] =
     await Promise.all([
       getMockExamData(session.user.id),
       getStudyCatalogData(session.user.id),
+      prisma.dailyPlan.findUnique({
+        where: {
+          userId_planDate: {
+            userId: session.user.id,
+            planDate: today,
+          },
+        },
+        select: { mode: true },
+      }),
     ]);
 
   return (
@@ -46,8 +59,10 @@ export default async function MockExamPage({ searchParams }: MockExamPageProps) 
         <MockExamHub
           activeSession={activeSession}
           catalog={catalog}
+          gradedExposure={gradedExposure}
           initialTab={initialTab}
           initialTopicId={initialTopicId}
+          mode={todayPlan?.mode ?? null}
           recentSessions={recentSessions}
           subtests={subtests}
         />

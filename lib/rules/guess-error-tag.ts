@@ -41,8 +41,12 @@ export function guessErrorTag(
 
   // Answered in the last window of a timed session
   if (input.timeLimitSeconds !== null && input.timeLimitSeconds > 0) {
+    const effectiveWindow =
+      input.timeLimitSeconds <= thresholds.lastWindowSeconds
+        ? Math.round(input.timeLimitSeconds * 0.3)
+        : thresholds.lastWindowSeconds;
     const timeRemaining = input.timeLimitSeconds - input.elapsedSeconds;
-    if (timeRemaining <= thresholds.lastWindowSeconds) {
+    if (timeRemaining <= effectiveWindow) {
       return "out_of_time";
     }
   }

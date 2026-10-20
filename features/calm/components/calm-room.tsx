@@ -1,13 +1,26 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
-import { saveCalmSessionAction, reframeThoughtAction } from "../actions";
+import {
+  saveCalmSessionAction,
+  deleteCalmSessionAction,
+  reframeThoughtAction,
+} from "../actions";
+import type { JournalEntryItem } from "../queries";
 import type { ReframedThoughtResult } from "@/lib/cbt/thought-reframe";
 import { PixelIcon, type PixelIconName } from "@/components/pixel";
 
 type CalmTab = "breathing" | "grounding" | "reframing" | "journal";
 
-export function CalmRoom({ userName: _userName = "" }: { userName?: string }) {
+export function CalmRoom({
+  userName: _userName = "",
+  hasConsent = true,
+  initialJournalEntries = [],
+}: {
+  userName?: string;
+  hasConsent?: boolean;
+  initialJournalEntries?: JournalEntryItem[];
+}) {
   const [activeTab, setActiveTab] = useState<CalmTab>("breathing");
 
   const tabs: Array<{ id: CalmTab; label: string; icon: PixelIconName }> = [
@@ -56,7 +69,12 @@ export function CalmRoom({ userName: _userName = "" }: { userName?: string }) {
       {activeTab === "breathing" && <BoxBreathingExercise />}
       {activeTab === "grounding" && <GroundingExercise />}
       {activeTab === "reframing" && <ReframingCards />}
-      {activeTab === "journal" && <PrivateJournal />}
+      {activeTab === "journal" && (
+        <PrivateJournal
+          hasConsent={hasConsent}
+          initialEntries={initialJournalEntries}
+        />
+      )}
     </div>
   );
 }
@@ -465,37 +483,50 @@ function ReframingCards() {
               </span>
             </div>
 
-            {/* Side-by-side: Thought vs Fact */}
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div className="space-y-1.5 border-2 border-border bg-background p-3">
-                <span className="text-xs font-bold text-muted-foreground">
-                  Pesan
-                </span>
-                <p className="text-sm italic leading-relaxed text-foreground/80">
-                  &ldquo;{aiResult.thought}&rdquo;
-                </p>
+            {/* 4 Structured Cognitive Steps */}
+            <div className="space-y-3">
+              {/* Step 1 & 2: Thought and Validation */}
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="space-y-1.5 border-2 border-border bg-background p-3">
+                  <span className="text-xs font-bold text-muted-foreground">
+                    1. Pikiran yang Diperiksa
+                  </span>
+                  <p className="text-sm italic leading-relaxed text-foreground/80">
+                    &ldquo;{aiResult.thought}&rdquo;
+                  </p>
+                </div>
+
+                <div className="space-y-1.5 border-2 border-border bg-moodi-butter/30 p-3">
+                  <span className="text-xs font-bold text-ink">
+                    2. Validasi Perasaan
+                  </span>
+                  <p className="text-xs leading-relaxed text-foreground sm:text-sm">
+                    {aiResult.validation}
+                  </p>
+                </div>
               </div>
 
-              <div className="space-y-1.5 border-2 border-border bg-moodi-sky/30 p-3">
+              {/* Step 3: Balanced Fact / Alternative Perspective */}
+              <div className="space-y-1.5 border-2 border-border bg-moodi-sky/30 p-3.5">
                 <span className="text-xs font-bold text-ink">
-                  Respon
+                  3. Sudut Pandang Objektif & Fakta Penyeimbang
                 </span>
-                <p className="text-sm font-semibold leading-relaxed text-foreground">
-                  {aiResult.validation}
+                <p className="text-xs font-medium leading-relaxed text-foreground sm:text-sm">
+                  {aiResult.fact}
                 </p>
               </div>
-            </div>
 
-            {/* Small Action Step */}
-            <div className="flex items-start gap-2.5 border border-border bg-card p-3">
-              <PixelIcon name="bulb" size={16} className="mt-0.5 shrink-0 text-foreground" />
-              <div className="space-y-0.5">
-                <span className="text-xs font-bold text-foreground">
-                  Langkah Kecil:
-                </span>
-                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                  {aiResult.smallStep}
-                </p>
+              {/* Step 4: Small Action Step */}
+              <div className="flex items-start gap-2.5 border-2 border-border bg-card p-3">
+                <PixelIcon name="bulb" size={16} className="mt-0.5 shrink-0 text-foreground" />
+                <div className="space-y-0.5">
+                  <span className="text-xs font-bold text-foreground">
+                    4. Langkah Mikro Hari Ini:
+                  </span>
+                  <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                    {aiResult.smallStep}
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -587,66 +618,174 @@ function ReframingCards() {
 }
 
 // 4. Private Journal Component
-function PrivateJournal() {
+function PrivateJournal({
+  hasConsent = true,
+  initialEntries = [],
+}: {
+  hasConsent?: boolean;
+  initialEntries?: JournalEntryItem[];
+}) {
   const [note, setNote] = useState<string>("");
   const [saved, setSaved] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
+  const [entries, setEntries] = useState<JournalEntryItem[]>(initialEntries);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   function handleSave(e: React.FormEvent) {
     e.preventDefault();
     if (!note.trim()) return;
 
+    const noteText = note.trim();
     startTransition(async () => {
       await saveCalmSessionAction({
         tool: "reframing",
         durationSeconds: 180,
-        note: note.trim(),
+        note: noteText,
       });
       setSaved(true);
       setNote("");
+      if (hasConsent) {
+        setEntries((prev) => [
+          {
+            id: String(Date.now()),
+            note: noteText,
+            tool: "reframing",
+            durationSeconds: 180,
+            createdAt: new Date(),
+          },
+          ...prev,
+        ]);
+      }
+    });
+  }
+
+  function handleDelete(id: string) {
+    setDeletingId(id);
+    startTransition(async () => {
+      const res = await deleteCalmSessionAction(id);
+      if (res?.success) {
+        setEntries((prev) => prev.filter((e) => e.id !== id));
+      }
+      setDeletingId(null);
     });
   }
 
   return (
-    <div className="pixel-shadow space-y-5 border-2 border-border bg-card p-5 sm:p-7">
-      <div className="border-b border-border/40 pb-3">
-        <h2 className="font-pixelify text-xl font-bold sm:text-2xl">
-          Jurnal Singkat Pribadi
-        </h2>
-        <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-          Tuliskan apa pun yang mengganjal di pikiranmu tanpa perlu khawatir dinilai.
-        </p>
+    <div className="space-y-6">
+      <div className="pixel-shadow space-y-5 border-2 border-border bg-card p-5 sm:p-7">
+        <div className="border-b border-border/40 pb-3">
+          <h2 className="font-pixelify text-xl font-bold sm:text-2xl">
+            Jurnal Singkat Pribadi
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+            Tuliskan apa pun yang mengganjal di pikiranmu tanpa perlu khawatir dinilai.
+          </p>
+        </div>
+
+        {!hasConsent && (
+          <div className="border-2 border-border bg-muted/60 p-3 text-xs text-muted-foreground">
+            Persetujuan data kondisi harian belum aktif. Catatan refleksi tidak akan disimpan di basis data agar privasimu tetap terjaga.
+          </div>
+        )}
+
+        {saved && (
+          <div className="inline-flex items-center gap-1.5 border-2 border-border bg-moodi-sky/30 p-2.5 text-xs font-semibold text-ink">
+            <PixelIcon name="check" size={14} />
+            <span>Catatan refleksimu telah tersimpan.</span>
+          </div>
+        )}
+
+        <form className="space-y-4" onSubmit={handleSave}>
+          <textarea
+            className="w-full border-2 border-border bg-background p-3 text-sm leading-relaxed text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            onChange={(e) => {
+              setNote(e.target.value);
+              setSaved(false);
+            }}
+            placeholder="Tuliskan ketakutan, unek-unek, atau apa yang ingin kamu lepaskan hari ini..."
+            rows={4}
+            value={note}
+          />
+
+          <div className="flex justify-end">
+            <button
+              className="pixel-press inline-flex min-h-11 items-center justify-center border-2 border-border bg-moodi-butter px-5 py-2 font-bold text-ink shadow-[2px_2px_0_var(--border)] hover:bg-moodi-butter/90 disabled:opacity-50"
+              disabled={isPending || !note.trim()}
+              type="submit"
+            >
+              {isPending ? "Menyimpan..." : "Simpan catatan"}
+            </button>
+          </div>
+        </form>
       </div>
 
-      {saved && (
-        <div className="inline-flex items-center gap-1.5 border-2 border-border bg-moodi-sky/30 p-2.5 text-xs font-semibold text-ink">
-          <PixelIcon name="check" size={14} />
-          <span>Catatan refleksimu telah tersimpan.</span>
-        </div>
-      )}
-
-      <form className="space-y-4" onSubmit={handleSave}>
-        <textarea
-          className="w-full border-2 border-border bg-background p-3 text-sm leading-relaxed text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-          onChange={(e) => {
-            setNote(e.target.value);
-            setSaved(false);
-          }}
-          placeholder="Tuliskan ketakutan, unek-unek, atau apa yang ingin kamu lepaskan hari ini..."
-          rows={5}
-          value={note}
-        />
-
-        <div className="flex justify-end">
-          <button
-            className="pixel-press inline-flex min-h-11 items-center justify-center border-2 border-border bg-moodi-butter px-5 py-2 font-bold text-ink shadow-[2px_2px_0_var(--border)] hover:bg-moodi-butter/90 disabled:opacity-50"
-            disabled={isPending || !note.trim()}
-            type="submit"
+      {/* Reflection History List */}
+      <section aria-labelledby="journal-history-title" className="space-y-3">
+        <div className="border-b border-border pb-2">
+          <h3
+            className="font-pixelify text-lg font-bold text-foreground"
+            id="journal-history-title"
           >
-            {isPending ? "Menyimpan..." : "Simpan catatan"}
-          </button>
+            Refleksi Sebelumnya
+          </h3>
+          <p className="text-xs text-muted-foreground">
+            Riwayat catatan pribadi yang kamu simpan saat menggunakan Ruang Tenang. Kamu memegang kendali penuh untuk menghapusnya kapan saja.
+          </p>
         </div>
-      </form>
+
+        {entries.length === 0 ? (
+          <div className="border-2 border-border bg-muted/40 p-5 text-center text-xs text-muted-foreground">
+            Belum ada catatan refleksi tersimpan.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {entries.map((entry) => {
+              const formattedDate = new Intl.DateTimeFormat("id-ID", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              }).format(new Date(entry.createdAt));
+
+              return (
+                <article
+                  className="flex flex-col justify-between gap-3 border-2 border-border bg-card p-4 sm:flex-row sm:items-start"
+                  key={entry.id}
+                >
+                  <div className="space-y-1.5 min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="border border-border bg-background px-2 py-0.5 text-[10px] font-bold text-foreground uppercase">
+                        {entry.tool === "reframing" ? "Refleksi Mandiri" : "Catatan Sesi"}
+                      </span>
+                      <time
+                        className="text-[11px] text-muted-foreground font-mono"
+                        dateTime={new Date(entry.createdAt).toISOString()}
+                      >
+                        {formattedDate}
+                      </time>
+                    </div>
+                    <p className="text-xs leading-relaxed text-foreground/90 whitespace-pre-wrap break-words sm:text-sm">
+                      {entry.note}
+                    </p>
+                  </div>
+
+                  <div className="shrink-0 self-end sm:self-start">
+                    <button
+                      className="pixel-press border border-border bg-background px-2.5 py-1 text-xs font-semibold text-muted-foreground transition-colors hover:bg-moodi-peach/30 hover:text-ink disabled:opacity-50"
+                      disabled={deletingId === entry.id}
+                      onClick={() => handleDelete(entry.id)}
+                      type="button"
+                    >
+                      {deletingId === entry.id ? "Menghapus..." : "Hapus catatan"}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
