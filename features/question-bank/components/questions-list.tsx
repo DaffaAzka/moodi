@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { deleteQuestion } from "@/features/question-bank/actions";
-import {
-  QUESTION_PAGE_SIZE,
-  type QuestionFiltersData,
-  type QuestionListItem,
+import { QUESTION_PAGE_SIZE } from "@/features/question-bank/types";
+import type {
+  QuestionFiltersData,
+  QuestionListItem,
 } from "@/features/question-bank/queries";
 import { siteCopy } from "@/lib/copy/id";
 import { PixelIcon } from "@/components/pixel";

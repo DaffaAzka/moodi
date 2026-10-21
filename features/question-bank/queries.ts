@@ -125,7 +125,8 @@ export const getQuestionEditorData = cache(async (questionId: string) =>
   }),
 );
 
-export const QUESTION_PAGE_SIZE = 50;
+import { QUESTION_PAGE_SIZE } from "./types";
+export { QUESTION_PAGE_SIZE };
 
 export interface QuestionFilterParams {
   subtestId?: string;
