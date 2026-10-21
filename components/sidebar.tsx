@@ -17,6 +17,7 @@ function NavigationIcon({ icon }: { icon: string }) {
     calm: "calm",
     grid: "table",
     list: "list",
+    user: "user",
   };
 
   const name = iconNameMap[icon] ?? "home";

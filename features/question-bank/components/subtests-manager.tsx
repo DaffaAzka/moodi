@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { deleteSubtest, saveSubtest } from "@/features/question-bank/actions";
 import { siteCopy } from "@/lib/copy/id";
 import type { SubtestListItem } from "@/features/question-bank/queries";
+import { PixelIcon } from "@/components/pixel";
 import { CrudModal } from "./crud-modal";
 import { DeleteButton } from "./delete-button";
 import { MutationForm } from "./mutation-form";
@@ -129,10 +131,24 @@ export function SubtestsManager({ subtests }: { subtests: SubtestListItem[] }) {
                     {subtest.defaultSeconds}s
                   </td>
                   <td className="px-4 py-3 text-right tabular-nums">
-                    {subtest._count.topics}
+                    <Link
+                      className="font-medium underline underline-offset-2 hover:text-link"
+                      href={`/dashboard/question-bank/topics?subtestId=${subtest.id}`}
+                      title={`Lihat topik di ${subtest.name}`}
+                    >
+                      {subtest._count.topics}
+                    </Link>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
+                      <Link
+                        className="inline-flex min-h-9 items-center gap-1.5 border-2 border-border bg-background px-3 text-xs font-semibold hover:bg-muted"
+                        href={`/dashboard/question-bank/topics?subtestId=${subtest.id}`}
+                        title={`Lihat topik di ${subtest.name}`}
+                      >
+                        <span>Lihat Topik</span>
+                        <PixelIcon name="arrow-right" size={12} />
+                      </Link>
                       <CrudModal
                         title={copy.editSubtest}
                         triggerClassName="inline-flex min-h-9 items-center border-2 border-border px-3 text-xs font-semibold hover:bg-muted"

@@ -24,7 +24,7 @@ It is built for the ITASE 7.0 Web Development competition (HMSI, Telkom Universi
 
 1. One tidy vertical slice beats nine half-built modules. Build in the order of section 8 and stop at the MVP line.
 2. The interface and docs may only present features that actually work as existing. Planned features stay labelled as planned.
-3. No LLM in anything a student sees or in any wellbeing logic. Every recommendation is still explainable with one rule and one sentence. Gemini is allowed only for admin authoring of lessons and questions, with human review before publishing. Cognitive reframing in the calm room is 100% local CBT logic to guarantee zero student data exposure. No WebSocket, no microservices, no native or Flutter app, and no CMS.
+3. Gemini is allowed for admin authoring of lessons and questions (with human review before publishing) and student thought reframing / curhat companion in the calm room (anonymized thought payload, non-clinical CBT system instructions, structured output, and local CBT fallback). No LLM in daily check-in mode evaluation or rule engine recommendations. No WebSocket, no microservices, no native or Flutter app, and no CMS.
 4. Never invent helpline numbers, legal article numbers, statistics, or database columns. Never copy UTBK questions or tutoring-company material. All questions are original.
 5. Ask before you add a dependency, pick one of the open decisions in section 13, or change a threshold in `src/config/rules.ts`.
 6. Never commit secrets. `.env` stays out of git. Keep `.env.example` current.
@@ -225,7 +225,7 @@ Key design decisions:
 
 MOODI touches student wellbeing, so this section carries real weight.
 
-- Zero Student Data Sent to LLMs: Gemini is strictly for admin authoring of lessons and questions. Student check-ins, journal notes, calm room sessions, and tryout answers are never sent to any external model. CBT reframing is computed 100% locally.
+- Student AI Boundary: Student check-ins, student profile data (name, email, university target), and tryout answers are never sent to external models. In the calm room, the student's curhat thought can be processed by Gemini (@google/genai) as an anonymized payload producing structured CBT boxes (empathy, distortion, fact, micro-step), with automatic local CBT fallback if offline or API key is absent.
 - Check-in results carry no clinical labels, and the app states clearly: "MOODI mendukung kesejahteraanmu, bukan pengganti psikolog atau konselor."
 - The referral screen is gentle and never judgmental. Help service numbers come only from verified records in `support_resources` with verification dates.
 - No leaderboards, no rankings, no streak shaming, and no red colors for wrong answers in student views.
@@ -297,7 +297,7 @@ Configured in `.env` locally and in deployment platforms:
 - ORM: Prisma Client v7.
 - Auth library: Better Auth with email and password accounts.
 - Rich text editor: Lexical for admin editor; server-side AST component for students.
-- Student AI boundary: Zero student data sent to external AI; local CBT reframing in Ruang Tenang.
+- Student AI boundary: Anonymized student curhat thought reframing in Ruang Tenang using Gemini API with local CBT fallback; zero student PII or profile data sent to AI; local rule engine for daily mode.
 
 ## 14. Definition of done
 

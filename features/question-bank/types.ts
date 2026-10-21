@@ -10,3 +10,5 @@ export type MutationConfig<T> = {
   parse: (formData: FormData) => T;
   mutate: (data: T) => Promise<void>;
 };
+
+export const QUESTION_PAGE_SIZE = 50;

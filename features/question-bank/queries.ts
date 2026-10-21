@@ -54,8 +54,9 @@ const questionListSelect = {
   isPublished: true,
   topic: {
     select: {
+      id: true,
       name: true,
-      subtest: { select: { name: true } },
+      subtest: { select: { id: true, name: true } },
     },
   },
   _count: { select: { options: true } },
@@ -124,21 +125,67 @@ export const getQuestionEditorData = cache(async (questionId: string) =>
   }),
 );
 
-export const QUESTION_PAGE_SIZE = 50;
+import { QUESTION_PAGE_SIZE } from "./types";
+export { QUESTION_PAGE_SIZE };
 
-export const getQuestions = cache(async (page: number) => {
-  const results = await prisma.question.findMany({
-    orderBy: { updatedAt: "desc" },
-    skip: (page - 1) * QUESTION_PAGE_SIZE,
-    take: QUESTION_PAGE_SIZE + 1,
-    select: questionListSelect,
+export interface QuestionFilterParams {
+  subtestId?: string;
+  topicId?: string;
+}
+
+export const getQuestions = cache(
+  async (page: number, filters?: QuestionFilterParams) => {
+    const where: Prisma.QuestionWhereInput = {};
+
+    if (filters?.topicId) {
+      where.topicId = filters.topicId;
+    } else if (filters?.subtestId) {
+      where.topic = { subtestId: filters.subtestId };
+    }
+
+    const [results, totalCount] = await Promise.all([
+      prisma.question.findMany({
+        where,
+        orderBy: { updatedAt: "desc" },
+        skip: (page - 1) * QUESTION_PAGE_SIZE,
+        take: QUESTION_PAGE_SIZE + 1,
+        select: questionListSelect,
+      }),
+      prisma.question.count({ where }),
+    ]);
+
+    return {
+      questions: results.slice(0, QUESTION_PAGE_SIZE),
+      page,
+      hasNextPage: results.length > QUESTION_PAGE_SIZE,
+      totalCount,
+    };
+  },
+);
+
+export const getQuestionFiltersData = cache(async () => {
+  const subtests = await prisma.subtest.findMany({
+    orderBy: { name: "asc" },
+    select: {
+      id: true,
+      name: true,
+      topics: {
+        orderBy: { name: "asc" },
+        select: {
+          id: true,
+          name: true,
+          _count: { select: { questions: true } },
+        },
+      },
+    },
   });
-  return {
-    questions: results.slice(0, QUESTION_PAGE_SIZE),
-    page,
-    hasNextPage: results.length > QUESTION_PAGE_SIZE,
-  };
+
+  return subtests;
 });
+
+export type QuestionFiltersData = Awaited<
+  ReturnType<typeof getQuestionFiltersData>
+>;
 
 export const getQuestionBankCounts = cache(async () => {
   const [subtestCount, topicCount, publishedCount, draftCount] =
