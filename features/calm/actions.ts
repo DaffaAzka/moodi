@@ -77,26 +77,38 @@ export async function deleteCalmSessionAction(id: string) {
   }
 }
 
+import {
+  reframeWithGemini,
+  type CurhatAiResult,
+} from "./gemini-reframe";
+
 export async function reframeThoughtAction(
   thought: string,
-): Promise<{ ok: boolean; data?: ReframedThoughtResult; error?: string }> {
+): Promise<{ ok: boolean; data?: CurhatAiResult; error?: string }> {
   const session = await getAuthSession();
   if (!session) return { ok: false, error: "Unauthorized" };
 
   const clean = thought?.trim();
   if (!clean || clean.length < 3) {
-    return { ok: false, error: "Tuliskan sedikit pikiran atau hal yang sedang membuatmu cemas." };
+    return {
+      ok: false,
+      error: "Tuliskan sedikit pikiran atau hal yang sedang membuatmu cemas.",
+    };
   }
 
-  if (clean.length > 350) {
-    return { ok: false, error: "Pikiran terlalu panjang (maksimal 350 karakter)." };
+  if (clean.length > 1000) {
+    return {
+      ok: false,
+      error: "Curhatan terlalu panjang (maksimal 1.000 karakter).",
+    };
   }
 
   try {
-    const result = reframeThoughtLocally(clean);
+    const result = await reframeWithGemini(clean);
     return { ok: true, data: result };
   } catch (err) {
     console.error("Reframing action error:", err);
-    return { ok: false, error: "Gagal memproses reframing saat ini. Coba lagi nanti." };
+    const fallback = reframeThoughtLocally(clean);
+    return { ok: true, data: { ...fallback, source: "local" } };
   }
 }

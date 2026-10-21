@@ -13,11 +13,16 @@ export const metadata = {
   title: `${copy.topicsTitle} | ${siteCopy.brand}`,
 };
 
-export default async function TopicsPage() {
+export default async function TopicsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ subtestId?: string }>;
+}) {
   const session = await getAuthSession();
   if (!session) redirect("/login");
   if (getUserRole(session.user.role) !== "admin") redirect("/dashboard");
 
+  const { subtestId } = await searchParams;
   const { subtests, topics } = await getTopicManagerData();
 
   return (
@@ -38,7 +43,11 @@ export default async function TopicsPage() {
         </p>
 
         <div className="mt-8">
-          <TopicsManager subtests={subtests} topics={topics} />
+          <TopicsManager
+            initialSubtestId={subtestId}
+            subtests={subtests}
+            topics={topics}
+          />
         </div>
       </div>
     </main>

@@ -61,4 +61,26 @@ describe("Privacy & CBT Thought Reframing", () => {
     const res3 = reframeThoughtLocally(chip3);
     expect(res3.distortion).toContain("Perbandingan Sosial");
   });
+
+  it(
+    "reframeWithGemini produces structured 4-step CBT output with graceful fallback",
+    async () => {
+      const { reframeWithGemini } = await import("@/features/calm/gemini-reframe");
+      const thought = "Aku merasa tidak sanggup mengejar materi UTBK yang begitu banyak";
+
+      const res = await reframeWithGemini(thought);
+
+      expect(res.thought).toBe(thought);
+      expect(res.distortion).toBeTruthy();
+      expect(res.validation).toBeTruthy();
+      expect(res.fact).toBeTruthy();
+      expect(res.smallStep).toBeTruthy();
+      if (process.env.GEMINI_API_KEY?.trim()) {
+        expect(res.source).toBe("ai");
+      } else {
+        expect(res.source).toBe("local");
+      }
+    },
+    15000,
+  );
 });

@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { QuestionsList } from "@/features/question-bank/components/questions-list";
-import { getQuestions } from "@/features/question-bank/queries";
+import {
+  getQuestions,
+  getQuestionFiltersData,
+} from "@/features/question-bank/queries";
 import { getAuthSession } from "@/lib/auth-session";
 import { siteCopy } from "@/lib/copy/id";
 import { getUserRole } from "@/lib/user-role";
@@ -15,17 +18,26 @@ export const metadata = {
 export default async function QuestionsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{
+    page?: string;
+    subtestId?: string;
+    topicId?: string;
+  }>;
 }) {
   const session = await getAuthSession();
   if (!session) redirect("/login");
   if (getUserRole(session.user.role) !== "admin") redirect("/dashboard");
 
-  const { page: rawPage } = await searchParams;
+  const { page: rawPage, subtestId, topicId } = await searchParams;
   const requestedPage = Number(rawPage ?? 1);
   const page =
     Number.isSafeInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
-  const { questions, hasNextPage } = await getQuestions(page);
+
+  const [{ questions, hasNextPage, totalCount }, filtersData] =
+    await Promise.all([
+      getQuestions(page, { subtestId, topicId }),
+      getQuestionFiltersData(),
+    ]);
 
   return (
     <main className="min-w-0 flex-1 px-4 pb-24 py-8 sm:px-6 lg:px-10 lg:pb-8">
@@ -54,9 +66,13 @@ export default async function QuestionsPage({
         </div>
 
         <QuestionsList
+          filtersData={filtersData}
           hasNextPage={hasNextPage}
           page={page}
           questions={questions}
+          selectedSubtestId={subtestId}
+          selectedTopicId={topicId}
+          totalCount={totalCount}
         />
       </div>
     </main>

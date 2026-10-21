@@ -22,8 +22,8 @@ export function getGenAiClient(): GoogleGenAI {
 export function getGeminiModel(): string {
   const model = process.env.GEMINI_MODEL?.trim();
   if (!model) {
-    // Default model if GEMINI_MODEL not explicitly specified
-    return "gemini-3.8-flash";
+    // Default fast & stable model
+    return "gemini-3-flash-preview";
   }
   return model;
 }

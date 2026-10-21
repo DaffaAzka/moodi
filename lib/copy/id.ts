@@ -170,7 +170,7 @@ export const siteCopy = {
       },
       admin: {
         title: "Ringkasan admin",
-        label: "Dashboard admin",
+        label: "",
         greeting: "Selamat datang,",
         roleLabel: "Admin",
         emptyTitle: "Panel administrasi MOODI.",
@@ -232,6 +232,13 @@ export const siteCopy = {
     questionsPagination: "Navigasi daftar pertanyaan",
     previousPage: "Sebelumnya",
     nextPage: "Berikutnya",
+    filterBySubtest: "Filter berdasarkan Subtes",
+    filterByTopic: "Filter berdasarkan Topik",
+    allSubtests: "Semua Subtes",
+    allTopics: "Semua Topik",
+    viewTopics: "Lihat Topik",
+    viewQuestions: "Lihat Soal",
+    resetFilter: "Reset Filter",
     /* Shared */
     subtests: "Subtes",
     topics: "Topik",

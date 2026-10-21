@@ -7,7 +7,7 @@ import {
   reframeThoughtAction,
 } from "../actions";
 import type { JournalEntryItem } from "../queries";
-import type { ReframedThoughtResult } from "@/lib/cbt/thought-reframe";
+import type { CurhatAiResult } from "../gemini-reframe";
 import { PixelIcon, type PixelIconName } from "@/components/pixel";
 
 type CalmTab = "breathing" | "grounding" | "reframing" | "journal";
@@ -337,7 +337,7 @@ function GroundingExercise() {
 // 3. Reframing Component
 function ReframingCards() {
   const [inputThought, setInputThought] = useState<string>("");
-  const [aiResult, setAiResult] = useState<ReframedThoughtResult | null>(null);
+  const [aiResult, setAiResult] = useState<CurhatAiResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
@@ -347,6 +347,7 @@ function ReframingCards() {
     "Waktunya tinggal sedikit, aku pasti gagal",
     "Skor tryout kemarin turun drastis",
     "Semua temanku belajarnya lebih rajin",
+    "Aku takut mengecewakan harapan orang tua",
   ];
 
   const presetCards = [
@@ -401,11 +402,11 @@ function ReframingCards() {
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-3">
           <div>
             <h2 className="font-pixelify text-xl font-bold text-foreground sm:text-2xl">
-              Bedah Pikiran yang Mengganggumu
+              Curhat & Bedah Pikiran
             </h2>
           </div>
           <p className="max-w-sm text-xs text-muted-foreground">
-            Tuliskan rasa cemasmu. MOODI akan membantumu melihat sudut pandang objektif yang menenangkan.
+            Curhatkan rasa cemasmu. Teman AI MOODI akan mendengarkan dan membantumu melihat sudut pandang objektif yang menenangkan.
           </p>
         </div>
 
@@ -415,20 +416,20 @@ function ReframingCards() {
             className="block text-xs font-bold text-muted-foreground"
             htmlFor="thought-input"
           >
-            Apa yang sedang terlintas di pikiranmu saat ini?
+            Curhatkan apa yang sedang mengganjal atau membuatmu cemas:
           </label>
           <div className="relative">
             <textarea
-              className="w-full resize-none border-2 border-border bg-background p-3 text-sm text-foreground focus:bg-card focus:outline-none focus:ring-2 focus:ring-foreground"
+              className="w-full resize-none border-2 border-border bg-background p-3 text-sm text-foreground focus:bg-card focus:outline-none focus:ring-2 focus:ring-foreground leading-relaxed"
               id="thought-input"
-              maxLength={350}
+              maxLength={1000}
               onChange={(e) => setInputThought(e.target.value)}
-              placeholder="Contoh: Rasanya aku tidak bakal lolos karena tryout kemarin masih banyak yang salah..."
-              rows={3}
+              placeholder="Tuliskan apa saja yang kamu rasakan hari ini. Mau pendek atau cerita panjang, MOODI siap mendengarkan..."
+              rows={4}
               value={inputThought}
             />
-            <span className="absolute bottom-2 right-3 text-[10px] text-muted-foreground">
-              {inputThought.length}/350
+            <span className="absolute bottom-2 right-3 text-[10px] text-muted-foreground font-mono">
+              {inputThought.length}/1000
             </span>
           </div>
 
@@ -461,12 +462,17 @@ function ReframingCards() {
 
           <div className="pt-1">
             <button
-              className="pixel-press inline-flex min-h-11 items-center justify-center border-2 border-border bg-moodi-sky px-5 py-2 font-bold text-ink shadow-[2px_2px_0_var(--border)] disabled:opacity-60"
+              className="pixel-press inline-flex min-h-11 items-center justify-center gap-2 border-2 border-border bg-moodi-sky px-5 py-2 font-bold text-ink shadow-[2px_2px_0_var(--border)] disabled:opacity-60"
               disabled={isPending || !inputThought.trim()}
               onClick={() => handleReframe()}
               type="button"
             >
-              {isPending ? "Memproses..." : "Bantu reframe"}
+              <PixelIcon name="bulb" size={16} />
+              <span>
+                {isPending
+                  ? "MOODI sedang mendengarkan & membedah..."
+                  : "Curhat & Bedah dengan AI"}
+              </span>
             </button>
           </div>
         </div>
@@ -475,21 +481,28 @@ function ReframingCards() {
         {aiResult && (
           <div className="space-y-4 border-2 border-border bg-muted/30 p-4 sm:p-5">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 pb-2">
-              <span className="border border-border bg-card px-2 py-0.5 text-xs font-bold text-foreground">
+              <span className="border border-border bg-card px-2.5 py-1 text-xs font-bold text-foreground">
                 Pola Pikir: {aiResult.distortion}
               </span>
-              <span className="text-[11px] text-muted-foreground">
-                Mode Refleksi Kognitif (Lokal)
+              <span className="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground">
+                {aiResult.source === "ai" ? (
+                  <>
+                    <span className="size-2 rounded-full bg-moodi-sky animate-pulse" />
+                    <span className="text-foreground">Teman Bicara AI MOODI</span>
+                  </>
+                ) : (
+                  <span>Refleksi Kognitif (Lokal)</span>
+                )}
               </span>
             </div>
 
             {/* 4 Structured Cognitive Steps */}
             <div className="space-y-3">
-              {/* Step 1 & 2: Thought and Validation */}
+              {/* Step 1 & 2: Thought and Empathy Validation */}
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <div className="space-y-1.5 border-2 border-border bg-background p-3">
                   <span className="text-xs font-bold text-muted-foreground">
-                    1. Pikiran yang Diperiksa
+                    1. Curhatan & Pikiran yang Diperiksa
                   </span>
                   <p className="text-sm italic leading-relaxed text-foreground/80">
                     &ldquo;{aiResult.thought}&rdquo;
@@ -498,7 +511,7 @@ function ReframingCards() {
 
                 <div className="space-y-1.5 border-2 border-border bg-moodi-butter/30 p-3">
                   <span className="text-xs font-bold text-ink">
-                    2. Validasi Perasaan
+                    2. Pesan Empati Teman Bicara
                   </span>
                   <p className="text-xs leading-relaxed text-foreground sm:text-sm">
                     {aiResult.validation}
@@ -521,7 +534,7 @@ function ReframingCards() {
                 <PixelIcon name="bulb" size={16} className="mt-0.5 shrink-0 text-foreground" />
                 <div className="space-y-0.5">
                   <span className="text-xs font-bold text-foreground">
-                    4. Langkah Mikro Hari Ini:
+                    4. Langkah Mikro Hari Ini (5 Menit):
                   </span>
                   <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
                     {aiResult.smallStep}
@@ -547,7 +560,7 @@ function ReframingCards() {
                 }}
                 type="button"
               >
-                Coba pikiran lain
+                Curhat pikiran lain
               </button>
             </div>
           </div>
